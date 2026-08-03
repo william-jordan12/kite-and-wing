@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { CATEGORIES } from '../data/store'
 import { useCart } from '../context/CartContext.jsx'
@@ -7,6 +7,13 @@ export default function Header() {
   const [open, setOpen] = useState(false)
   const { count } = useCart()
   const location = useLocation()
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
 
   const close = () => setOpen(false)
 
@@ -27,7 +34,9 @@ export default function Header() {
 
         <button
           className={`burger ${open ? 'is-open' : ''}`}
-          aria-label="Toggle menu"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
+          aria-controls="main-nav"
           onClick={() => setOpen((v) => !v)}
         >
           <span />
@@ -35,7 +44,9 @@ export default function Header() {
           <span />
         </button>
 
-        <nav className={`main-nav ${open ? 'is-open' : ''}`}>
+        <div className={`nav-backdrop ${open ? 'visible' : ''}`} onClick={close} aria-hidden="true" />
+
+        <nav id="main-nav" className={`main-nav ${open ? 'is-open' : ''}`}>
           <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={close}>
             Home
           </Link>
