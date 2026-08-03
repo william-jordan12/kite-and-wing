@@ -1,43 +1,10 @@
 import 'dotenv/config'
 import http from 'node:http'
 import login from '../api/login.js'
-import * as products from '../api/products.js'
-import * as productItem from '../api/products/[id].js'
-import * as orders from '../api/orders.js'
-import * as settings from '../api/settings.js'
-
-function makeReq(res, rawUrl, method, headers = {}, body = null) {
-  const url = new URL(rawUrl, 'http://localhost')
-  const req = {
-    url: url.pathname + url.search,
-    method,
-    headers,
-    on(evt, cb) {
-      if (evt === 'data' && body) {
-        cb(JSON.stringify(body))
-      }
-      if (evt === 'end') {
-        cb()
-      }
-    },
-  }
-  return { req, res }
-}
-
-function makeRes() {
-  const res = {
-    statusCode: 200,
-    body: null,
-    status(code) {
-      this.statusCode = code
-      return this
-    },
-    json(data) {
-      this.body = data
-    },
-  }
-  return res
-}
+import products from '../api/products.js'
+import productItem from '../api/products/[id].js'
+import orders from '../api/orders.js'
+import settings from '../api/settings.js'
 
 const server = http.createServer(async (req, res) => {
   const raw = await new Promise((resolve) => {
@@ -47,22 +14,15 @@ const server = http.createServer(async (req, res) => {
   })
 
   const method = req.method
-  const url = new URL(req.url, 'http://localhost')
-  const path = url.pathname
-  const headers = req.headers
+  const path = new URL(req.url, 'http://localhost').pathname
+  const body = raw ? JSON.parse(raw) : null
 
   let handler
-  let body = raw ? JSON.parse(raw) : null
-
   if (path === '/api/login' && method === 'POST') handler = login
-  else if (path === '/api/products' && method === 'GET') handler = products.GET
-  else if (path === '/api/products' && method === 'POST') handler = products.POST
-  else if (path.startsWith('/api/products/') && method === 'PUT') handler = productItem.PUT
-  else if (path.startsWith('/api/products/') && method === 'DELETE') handler = productItem.DELETE
-  else if (path === '/api/orders' && method === 'GET') handler = orders.GET
-  else if (path === '/api/orders' && method === 'POST') handler = orders.POST
-  else if (path === '/api/settings' && method === 'GET') handler = settings.GET
-  else if (path === '/api/settings' && method === 'PUT') handler = settings.PUT
+  else if (path === '/api/products') handler = products
+  else if (path.startsWith('/api/products/')) handler = productItem
+  else if (path === '/api/orders') handler = orders
+  else if (path === '/api/settings') handler = settings
 
   if (!handler) {
     res.statusCode = 404
@@ -73,13 +33,23 @@ const server = http.createServer(async (req, res) => {
   const fakeReq = {
     url: path,
     method,
-    headers,
+    headers: req.headers,
     on(evt, cb) {
       if (evt === 'data' && body) cb(JSON.stringify(body))
       if (evt === 'end') cb()
     },
   }
-  const fakeRes = makeRes()
+  const fakeRes = {
+    statusCode: 200,
+    body: null,
+    status(code) {
+      this.statusCode = code
+      return this
+    },
+    json(data) {
+      this.body = data
+    },
+  }
   await handler(fakeReq, fakeRes)
   res.statusCode = fakeRes.statusCode
   res.setHeader('Content-Type', 'application/json')
@@ -93,20 +63,22 @@ server.listen(port, async () => {
     const data = r.data === undefined ? '(no body)' : JSON.stringify(r.data).slice(0, 180)
     console.log(name, r.status, data)
   }
+  const call = async (url, opts = {}) => {
+    const r = await fetch(base + url, opts)
+    return { status: r.status, data: await r.json().catch(() => null) }
+  }
 
   try {
-    let r = await fetch(`${base}/login`, {
+    let r = await call('/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: process.env.ADMIN_USER, password: process.env.ADMIN_PASSWORD }),
     })
-    const { token } = await r.json()
-    const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
-    log('login', { status: r.status, data: { token: token.slice(0, 20) + '...' } })
+    const auth = { Authorization: `Bearer ${r.data.token}`, 'Content-Type': 'application/json' }
+    log('login', { status: r.status, data: { token: (r.data.token || '').slice(0, 20) + '...' } })
 
-    r = await fetch(`${base}/products`, { headers: auth })
-    const all = await r.json()
-    log('GET products', { status: r.status, data: { count: all.length } })
+    r = await call('/products')
+    log('GET products', { status: r.status, data: { count: r.data?.length } })
 
     const testProduct = {
       id: 'test-product',
@@ -118,22 +90,17 @@ server.listen(port, async () => {
       price: 1234,
       description: 'temporary test entry',
     }
-
-    r = await fetch(`${base}/products`, {
-      method: 'POST',
-      headers: auth,
-      body: JSON.stringify(testProduct),
-    })
+    r = await call('/products', { method: 'POST', headers: auth, body: JSON.stringify(testProduct) })
     log('POST product', r)
 
-    r = await fetch(`${base}/products/test-product`, {
+    r = await call('/products/test-product', {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ ...testProduct, price: 1300 }),
     })
     log('PUT product', r)
 
-    r = await fetch(`${base}/products/test-product`, { method: 'DELETE', headers: auth })
+    r = await call('/products/test-product', { method: 'DELETE', headers: auth })
     log('DELETE product', r)
 
     const order = {
@@ -147,29 +114,27 @@ server.listen(port, async () => {
       total: 2400,
       items: [{ productId: 'rebel-2026', qty: 1, product: { name: 'Rebel', price: 1899 } }],
     }
-    r = await fetch(`${base}/orders`, { method: 'POST', headers: auth, body: JSON.stringify(order) })
+    r = await call('/orders', { method: 'POST', headers: auth, body: JSON.stringify(order) })
     log('POST order', r)
 
-    r = await fetch(`${base}/orders`, { headers: auth })
-    const ordersList = await r.json()
-    log('GET orders', { status: r.status, data: { count: ordersList.length } })
+    r = await call('/orders', { headers: auth })
+    log('GET orders', { status: r.status, data: { count: r.data?.length } })
 
-    r = await fetch(`${base}/products`, {})
-    log('GET products no-auth', { status: r.status, data: (await r.json()).error })
+    r = await call('/products')
+    log('GET products no-auth', { status: r.status, data: { count: r.data?.length } })
 
-    r = await fetch(`${base}/settings`, {})
-    const settingsBefore = await r.json()
-    log('GET settings', { status: r.status, data: settingsBefore })
+    r = await call('/settings')
+    log('GET settings', r)
 
-    r = await fetch(`${base}/settings`, {
+    r = await call('/settings', {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ facebook: 'https://facebook.com/test', email: 'kiteandwindsupply@gmail.com' }),
     })
     log('PUT settings', r)
 
-    r = await fetch(`${base}/settings`, { method: 'PUT', headers: {} })
-    log('PUT settings no-auth', { status: r.status, data: (await r.json()).error })
+    r = await call('/settings', { method: 'PUT', headers: {} })
+    log('PUT settings no-auth', { status: r.status, data: r.data && r.data.error })
   } catch (err) {
     console.error('TEST FAILED:', err.message)
   } finally {

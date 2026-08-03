@@ -1,19 +1,18 @@
-export async function GET(req, res) {
+export default async function handler(req, res) {
   const report = { ok: false, steps: [] }
   const step = (name, data) => report.steps.push({ name, ...data })
 
   try {
-    step('import pg', {})
+    step('handler started', { method: req.method })
     const pgMod = await import('pg')
     const { Pool } = pgMod.default || pgMod
-    step('pg imported', { version: (pgMod?.default?.version || 'unknown') })
+    step('pg imported', {})
 
     const raw = process.env.DATABASE_URL || ''
     step('DATABASE_URL', {
       set: Boolean(raw),
       hasPassword: raw.includes('npg_'),
       host: (raw.match(/@([^/]+)/) || [])[1] || '(none)',
-      prefix: raw.slice(0, 20) + '...',
     })
 
     const pool = new Pool({
