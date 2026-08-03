@@ -28,6 +28,7 @@ export default function AdminLogin() {
   return (
     <div className="admin-page">
       <form className="admin-login" onSubmit={submit}>
+        <img src="/logo.svg" alt="Kite and Wind Supply logo" className="admin-login__logo" />
         <h1>Admin</h1>
         <p>Sign in to manage products and orders.</p>
         <div className="field">

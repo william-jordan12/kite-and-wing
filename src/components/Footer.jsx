@@ -12,8 +12,13 @@ export default function Footer() {
       <div className="container">
         <div className="footer__grid">
           <div className="footer__brand">
-            <span className="logo-kite">Kite &amp; Wind</span>
-            <span className="logo-sub">SUPPLY</span>
+            <div className="footer__brand-lockup">
+              <img src="/logo.svg" alt="Kite and Wind Supply logo" className="footer__logo" />
+              <span className="footer__brand-text">
+                <span className="logo-kite">Kite &amp; Wind</span>
+                <span className="logo-sub">SUPPLY</span>
+              </span>
+            </div>
             <p className="footer__claim">
               True kiteboarding. True windsurfing. True wing &amp; foiling.
             </p>

@@ -29,6 +29,13 @@
   gap: 14px;
 }
 
+.admin-login__logo {
+  display: block;
+  height: 56px;
+  width: auto;
+  margin: 0 auto;
+}
+
 .admin-login h1 {
   font-size: 26px;
   font-weight: 800;

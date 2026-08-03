@@ -100,6 +100,7 @@ export default function Header() {
           </nav>
 
           <Link to="/" className="logo" onClick={close} aria-label="Kite and Wind Supply home">
+            <img src="/logo.svg" alt="" className="logo-mark" />
             <span className="logo-kite">Kite &amp; Wind</span>
             <span className="logo-sub">SUPPLY</span>
           </Link>
