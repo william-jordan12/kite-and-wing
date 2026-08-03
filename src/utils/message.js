@@ -1,22 +1,25 @@
+import { formatUSD, formatEUR } from './pricing.js'
+
 export function buildOrderMessage(order, email) {
-  const items = order.items
-    .map(
-      (i) =>
-        `- ${i.qty} x ${i.product.name} (${i.product.size}) — $${(
-          i.product.price * i.qty
-        ).toLocaleString('en-US', { minimumFractionDigits: 2 })}`
-    )
+  const items = (order.items || [])
+    .map((i) => {
+      const name = i.product?.name || i.name
+      const size = i.size || i.product?.size || 'One Size'
+      const price = i.unitPrice || i.product?.price || i.price || 0
+      const line = price * i.qty
+      return `- ${i.qty} x ${name} (${size}) — ${formatUSD(line)} / ${formatEUR(line)}`
+    })
     .join('\n')
 
+  const total = order.total || 0
+
   return `To: ${email}
-Subject: Online payment request — order of $${order.total.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-  })}
+Subject: Online payment request — order of ${formatUSD(total)} / ${formatEUR(total)}
 
 Hello kite and wind supply,
 I would like to pay online for the following order:
 ${items}
-TOTAL ORDER COST: $${order.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+TOTAL ORDER COST: ${formatUSD(total)} / ${formatEUR(total)}
 My name: ${order.fullName}
 My email: ${order.email}
 Please send me your payment details so I can complete this order. Thank you!`

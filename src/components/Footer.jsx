@@ -32,6 +32,7 @@ export default function Footer() {
 
             <div className="footer__col">
               <h4>Help</h4>
+              <Link to="/about">About us</Link>
               <Link to="/reviews">Reviews</Link>
               <Link to="/faq">FAQ</Link>
               <Link to="/cart">Cart</Link>
@@ -45,6 +46,7 @@ export default function Footer() {
               {settings.locations?.map((loc) => (
                 <span key={loc}>{loc}</span>
               ))}
+              <span>Prices in USD and EUR</span>
             </div>
 
             <div className="footer__col">

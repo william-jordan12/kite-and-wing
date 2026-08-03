@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { STORE_INFO } from '../data/store'
 import { paymentLogo } from '../utils/placeholder'
+import { formatUSD, formatEUR } from '../utils/pricing.js'
 import { useCart } from '../context/CartContext.jsx'
 import { saveOrder } from '../utils/order.js'
 
@@ -125,12 +126,16 @@ export default function CheckoutPage() {
         <div className="checkout-foot">
           <div className="checkout-total">
             <span>Order total</span>
-            <strong>${total.toLocaleString('en-US')}</strong>
+            <strong>{formatUSD(total)}</strong>
+            <span>{formatEUR(total)}</span>
           </div>
           <button type="submit" className="btn btn-primary btn-block">
             Proceed to payment
           </button>
         </div>
+        <p className="cart-shipping-note">
+          We ship from California, USA and Vilnius, Lithuania — from the warehouse closest to you.
+        </p>
       </form>
     </div>
   )

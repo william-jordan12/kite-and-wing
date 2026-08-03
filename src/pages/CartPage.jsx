@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { formatPrice } from '../data/store'
 import { productImage } from '../utils/placeholder.js'
+import { formatUSD, formatEUR } from '../utils/pricing.js'
 import { useCart } from '../context/CartContext.jsx'
 
 export default function CartPage() {
@@ -27,8 +27,8 @@ export default function CartPage() {
       </div>
       <div className="cart-layout">
         <div className="cart-items">
-          {detail.map(({ product, qty }) => (
-            <div className="cart-item" key={product.id}>
+          {detail.map(({ product, qty, size, unitPrice }) => (
+            <div className="cart-item" key={`${product.id}::${size}`}>
               <Link to={`/product/${product.id}`} className="cart-item-media">
                 <img src={productImage(product)} alt={product.name} />
               </Link>
@@ -37,15 +37,21 @@ export default function CartPage() {
                   <h3>{product.name}</h3>
                 </Link>
                 <span className="product-brand">{product.brand}</span>
-                <span className="product-type">{product.size}</span>
+                <span className="product-type">
+                  {product.type} &middot; {size}
+                </span>
+                <span className="cart-item-unit">{formatUSD(unitPrice)}</span>
               </div>
               <div className="qty-control">
-                <button onClick={() => updateQty(product.id, qty - 1)}>&minus;</button>
+                <button onClick={() => updateQty(product.id, size, qty - 1)}>&minus;</button>
                 <span>{qty}</span>
-                <button onClick={() => updateQty(product.id, qty + 1)}>+</button>
+                <button onClick={() => updateQty(product.id, size, qty + 1)}>+</button>
               </div>
-              <div className="cart-item-price">{formatPrice(product.price * qty)}</div>
-              <button className="cart-remove" onClick={() => removeItem(product.id)}>
+              <div className="cart-item-price">
+                {formatUSD(unitPrice * qty)}
+                <span className="cart-item-price-eur">{formatEUR(unitPrice * qty)}</span>
+              </div>
+              <button className="cart-remove" onClick={() => removeItem(product.id, size)}>
                 &times;
               </button>
             </div>
@@ -56,7 +62,11 @@ export default function CartPage() {
           <h2>Order summary</h2>
           <div className="summary-row">
             <span>Subtotal</span>
-            <span>{formatPrice(total)}</span>
+            <span>{formatUSD(total)}</span>
+          </div>
+          <div className="summary-row">
+            <span>Subtotal (EUR)</span>
+            <span>{formatEUR(total)}</span>
           </div>
           <div className="summary-row">
             <span>Shipping</span>
@@ -64,8 +74,15 @@ export default function CartPage() {
           </div>
           <div className="summary-row summary-total">
             <span>Total</span>
-            <span>{formatPrice(total)}</span>
+            <span>{formatUSD(total)}</span>
           </div>
+          <div className="summary-row">
+            <span>Total (EUR)</span>
+            <span>{formatEUR(total)}</span>
+          </div>
+          <p className="cart-shipping-note">
+            We ship from California, USA and Vilnius, Lithuania — from the warehouse closest to you.
+          </p>
           <Link to="/checkout" className="btn btn-primary btn-block">
             Proceed to checkout
           </Link>

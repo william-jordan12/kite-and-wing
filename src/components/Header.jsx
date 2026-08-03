@@ -94,6 +94,9 @@ export default function Header() {
             <Link to="/faq" className="nav-link" onClick={close}>
               FAQ
             </Link>
+            <Link to="/about" className="nav-link" onClick={close}>
+              About
+            </Link>
           </nav>
 
           <Link to="/" className="logo" onClick={close} aria-label="Kite and Wind Supply home">
