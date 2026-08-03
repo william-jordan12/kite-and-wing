@@ -1,8 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
-import Header from './components/Header.jsx'
-import Footer from './components/Footer.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
-import ChatWidget from './components/ChatWidget.jsx'
+import PublicLayout from './components/PublicLayout.jsx'
 import Home from './pages/Home.jsx'
 import CategoryPage from './pages/CategoryPage.jsx'
 import ProductPage from './pages/ProductPage.jsx'
@@ -19,9 +17,8 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
-      <Header />
-      <main>
-        <Routes>
+      <Routes>
+        <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/shop/:categoryId" element={<CategoryPage />} />
           <Route path="/product/:productId" element={<ProductPage />} />
@@ -31,12 +28,10 @@ export default function App() {
           <Route path="/confirmation" element={<ConfirmationPage />} />
           <Route path="/reviews" element={<ReviewsPage />} />
           <Route path="/faq" element={<FaqPage />} />
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        </Routes>
-      </main>
-      <Footer />
-      <ChatWidget />
+        </Route>
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      </Routes>
     </>
   )
 }
