@@ -24,17 +24,17 @@ function getId(req) {
 const authedPut = requireAuth(async (req, res) => {
   const id = getId(req)
   const body = await readBody(req)
-  const { name, brand, category, type = '', size = '', price, description = '' } = body
+  const { name, brand, category, type = '', size = '', price, description = '', image = '' } = body
   if (!name || !brand || !category || !Number.isFinite(Number(price))) {
     res.status(400).json({ error: 'name, brand, category and price are required' })
     return
   }
   const result = await pool.query(
     `UPDATE products
-     SET name = $2, brand = $3, category = $4, type = $5, size = $6, price = $7, description = $8
+     SET name = $2, brand = $3, category = $4, type = $5, size = $6, price = $7, description = $8, image = $9
      WHERE id = $1
-     RETURNING id, name, brand, category, type, size, price, description`,
-    [id, name, brand, category, type, size, price, description]
+     RETURNING id, name, brand, category, type, size, price, description, image`,
+    [id, name, brand, category, type, size, price, description, image]
   )
   if (!result.rows.length) {
     res.status(404).json({ error: 'Product not found' })

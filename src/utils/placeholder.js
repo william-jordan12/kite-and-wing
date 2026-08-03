@@ -15,6 +15,40 @@ const TYPES = {
 }
 
 const REAL_IMAGES = {
+  'Rebel 2026': '/images/products/rebel-2026.png',
+  'Click Bar 2026': '/images/products/click-bar-2026.png',
+  'XR7': '/images/products/xr7.jpg',
+  'Orbit 2026': '/images/products/orbit-2026.png',
+  'Switchblade': '/images/products/switchblade.png',
+  'Bandit S': '/images/products/bandit.png',
+  'Edge 2026': '/images/products/edge-2026.jpg',
+  'RS 2026': '/images/products/rs-2026.png',
+  'Lithium 2026': '/images/products/lithium.png',
+  'Rally': '/images/products/rally.png',
+  'Supermodel': '/images/products/supermodel.webp',
+  'Jaime Foil': '/images/products/jaime-foil.png',
+  'Atmos': '/images/products/atmos.png',
+  'XCaliber': '/images/products/xcaliber.png',
+  'Unit Wing': '/images/products/unit-wing.png',
+  'Swing V4': '/images/products/swing-wing.png',
+  'CF Wing': '/images/products/armstrong-wing.jpg',
+  'Nova Wing': '/images/products/nova-wing.png',
+  'Surf Wing': '/images/products/naish-wing.png',
+  'Axis Complete Foil': '/images/products/axis-foil.png',
+  'Sabfoil Cruise Set': '/images/products/sabfoil.jpg',
+  'KT Foiling Race': '/images/products/kt-foil.jpg',
+  'Code Foil Package': '/images/products/code-foil.jpg',
+  'Prism Wing': '/images/products/prism-wing.png',
+  'Super Hero': '/images/products/super-hero.png',
+  'S-1': '/images/products/s1.jpg',
+  'RS:Racing': '/images/products/rs-racing.jpg',
+  'Evo 100': '/images/products/evo.jpg',
+  'A-Sonic 110': '/images/products/jp-air.jpg',
+  'Skate 105': '/images/products/skate.png',
+  'Banzai 94': '/images/products/banzai.jpg',
+  'Wave 5.2': '/images/products/ezzy-wave.jpg',
+  'AC-1 5.6': '/images/products/point7.png',
+  'Fire 5.8': '/images/products/rrd-fire.png',
   'Rebel D/LAB 2025': '/images/products/rebel-dlab-2025.png',
   'Neo D/LAB 2025': '/images/products/neo-dlab-2025.png',
   'Mono 2025': '/images/products/mono-2025.png',
@@ -38,6 +72,8 @@ const REAL_IMAGES = {
 }
 
 export function productImage(product) {
+  if (product.image) return product.image
+
   const real = REAL_IMAGES[product.name]
   if (real) return real
 

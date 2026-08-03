@@ -19,7 +19,7 @@ import { useProducts } from '../../context/ProductsContext.jsx'
 import { useSettings } from '../../context/SettingsContext.jsx'
 import '../admin.css'
 
-const EMPTY = { id: '', name: '', brand: '', category: 'kiteboarding', type: '', size: '', price: '', description: '' }
+const EMPTY = { id: '', name: '', brand: '', category: 'kiteboarding', type: '', size: '', price: '', description: '', image: '' }
 
 export default function AdminDashboard() {
   const token = getToken()
@@ -164,6 +164,39 @@ export default function AdminDashboard() {
 
   const change = (field, value) => setForm((f) => ({ ...f, [field]: value }))
 
+  const handleImageFile = (file) => {
+    if (!file || !file.type.startsWith('image/')) {
+      setError('Please drop an image file.')
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => {
+      const img = new Image()
+      img.onload = () => {
+        const max = 1200
+        const scale = Math.min(1, max / Math.max(img.width, img.height))
+        const canvas = document.createElement('canvas')
+        canvas.width = Math.round(img.width * scale)
+        canvas.height = Math.round(img.height * scale)
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85)
+        change('image', dataUrl)
+        setError('')
+      }
+      img.onerror = () => setError('Could not read that image.')
+      img.src = reader.result
+    }
+    reader.onerror = () => setError('Could not read that file.')
+    reader.readAsDataURL(file)
+  }
+
+  const onImageDrop = (ev) => {
+    ev.preventDefault()
+    const file = ev.dataTransfer?.files?.[0]
+    handleImageFile(file)
+  }
+
   const changeSetting = (field, value) => setSettingsForm((f) => ({ ...f, [field]: value }))
 
   const saveSettings = async (ev) => {
@@ -296,6 +329,33 @@ export default function AdminDashboard() {
                 <label>Description</label>
                 <textarea rows="3" value={form.description} onChange={(e) => change('description', e.target.value)} />
               </div>
+              <div className="field">
+                <label>Product image (drag &amp; drop)</label>
+                <div
+                  className="dropzone"
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={onImageDrop}
+                  onClick={() => document.getElementById('product-image-input')?.click()}
+                >
+                  {form.image ? (
+                    <img src={form.image} alt="Preview" className="dropzone-preview" />
+                  ) : (
+                    <span className="dropzone-hint">Drop an image here or click to browse</span>
+                  )}
+                  <input
+                    id="product-image-input"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={(e) => handleImageFile(e.target.files?.[0])}
+                  />
+                </div>
+                {form.image && (
+                  <button type="button" className="text-link" onClick={() => change('image', '')}>
+                    Remove image
+                  </button>
+                )}
+              </div>
               {editing && (
                 <button type="button" className="text-link" onClick={startNew}>
                   Cancel edit
@@ -313,6 +373,7 @@ export default function AdminDashboard() {
             <table className="admin-table">
               <thead>
                 <tr>
+                  <th></th>
                   <th>Name</th>
                   <th>Brand</th>
                   <th>Category</th>
@@ -323,6 +384,13 @@ export default function AdminDashboard() {
               <tbody>
                 {products.map((p) => (
                   <tr key={p.id}>
+                    <td className="admin-thumb">
+                      {p.image ? (
+                        <img src={p.image} alt="" />
+                      ) : (
+                        <span className="admin-thumb-placeholder">—</span>
+                      )}
+                    </td>
                     <td>
                       <strong>{p.name}</strong>
                       <span className="admin-sub">{p.type} {p.size}</span>

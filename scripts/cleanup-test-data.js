@@ -10,6 +10,7 @@ const client = new Client({
 await client.connect()
 await client.query("DELETE FROM orders WHERE email = 'test@example.com'")
 await client.query(`UPDATE settings SET value = '""' WHERE key = 'facebook'`)
+await client.query(`UPDATE settings SET value = '"+15551234567"' WHERE key = 'whatsapp'`)
 await client.query(`DELETE FROM settings WHERE key = 'admin_password_hash'`)
 await client.query(`DELETE FROM visits WHERE user_agent = 'test-agent'`)
 console.log('cleaned test data')

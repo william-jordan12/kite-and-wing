@@ -20,9 +20,12 @@ await client.query(`
     type TEXT,
     size TEXT,
     price NUMERIC NOT NULL,
-    description TEXT
+    description TEXT,
+    image TEXT
   );
 `)
+
+await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS image TEXT`)
 
 await client.query(`
   CREATE TABLE IF NOT EXISTS orders (
@@ -76,8 +79,8 @@ for (const [key, value] of Object.entries(defaults)) {
 
 for (const p of PRODUCTS) {
   await client.query(
-    `INSERT INTO products (id, name, brand, category, type, size, price, description)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `INSERT INTO products (id, name, brand, category, type, size, price, description, image)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
      ON CONFLICT (id) DO UPDATE SET
        name = EXCLUDED.name,
        brand = EXCLUDED.brand,
@@ -86,7 +89,7 @@ for (const p of PRODUCTS) {
        size = EXCLUDED.size,
        price = EXCLUDED.price,
        description = EXCLUDED.description`,
-    [p.id, p.name, p.brand, p.category, p.type, p.size, p.price, p.description]
+    [p.id, p.name, p.brand, p.category, p.type, p.size, p.price, p.description, p.image || null]
   )
 }
 
