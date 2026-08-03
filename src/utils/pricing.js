@@ -25,6 +25,21 @@ const LADDERS = [
 
 const normalize = (s) => String(s).toLowerCase().replace(/[\s./-]/g, '')
 
+export function sizeOptions(type) {
+  const ladder = LADDERS.find((l) => String(type || '').toLowerCase().includes(l.key))
+  return ladder ? ladder.sizes : []
+}
+
+export function defaultSize(type) {
+  const sizes = sizeOptions(type)
+  return sizes.length ? sizes[Math.floor(sizes.length / 2)] : ''
+}
+
+export function isValidSize(type, size) {
+  if (!size) return false
+  return sizeOptions(type).some((s) => normalize(s) === normalize(size))
+}
+
 export function getVariants(product) {
   if (Array.isArray(product.variants) && product.variants.length) {
     return product.variants.map((v) => ({ size: v.size, price: Number(v.price) || 0 }))

@@ -17,6 +17,7 @@ import {
 import { CATEGORIES, formatPrice } from '../../data/store.js'
 import { useProducts } from '../../context/ProductsContext.jsx'
 import { useSettings } from '../../context/SettingsContext.jsx'
+import { getVariants, defaultSize, isValidSize } from '../../utils/pricing.js'
 import '../admin.css'
 
 const EMPTY = { id: '', name: '', brand: '', category: 'kiteboarding', type: '', size: '', price: '', description: '', image: '' }
@@ -182,7 +183,17 @@ export default function AdminDashboard() {
     setError('')
   }
 
-  const change = (field, value) => setForm((f) => ({ ...f, [field]: value }))
+  const change = (field, value) =>
+    setForm((f) => {
+      const next = { ...f, [field]: value }
+      if (field === 'type') {
+        const dflt = defaultSize(value)
+        if (dflt && !isValidSize(value, next.size)) {
+          next.size = dflt
+        }
+      }
+      return next
+    })
 
   const handleImageFile = (file) => {
     if (!file || !file.type.startsWith('image/')) {
@@ -273,6 +284,10 @@ export default function AdminDashboard() {
   }
 
   const brands = CATEGORIES.find((c) => c.id === form.category)?.brands || []
+  const preview =
+    form.type || form.size
+      ? getVariants({ type: form.type, size: form.size, price: Number(form.price) || 0 })
+      : []
 
   return (
     <div className="admin-page">
@@ -346,14 +361,26 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div className="field">
-                  <label>Type</label>
+                  <label>Type (model, e.g. Kite)</label>
                   <input value={form.type} onChange={(e) => change('type', e.target.value)} />
                 </div>
                 <div className="field">
-                  <label>Size</label>
+                  <label>Base size (auto-fills from type)</label>
                   <input value={form.size} onChange={(e) => change('size', e.target.value)} />
                 </div>
               </div>
+              {preview.length > 0 && (
+                <div className="sizes-preview">
+                  <span className="admin-sub">Auto-generated sizes:</span>
+                  <div className="sizes-preview__chips">
+                    {preview.map((v) => (
+                      <span key={v.size} className="sizes-preview__chip">
+                        {v.size} &middot; {formatPrice(v.price)}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="field">
                 <label>Price (USD)</label>
                 <input type="number" min="0" step="0.01" value={form.price} onChange={(e) => change('price', e.target.value)} required />

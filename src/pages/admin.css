@@ -95,6 +95,32 @@
   padding: 22px;
 }
 
+.sizes-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #f4f8f9;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+.sizes-preview__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sizes-preview__chip {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
 .admin-form h2 {
   font-size: 18px;
   font-weight: 800;
