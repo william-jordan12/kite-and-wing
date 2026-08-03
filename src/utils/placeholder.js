@@ -71,6 +71,26 @@ const REAL_IMAGES = {
   'Hoody Team Zip Women': '/images/products/hoody-team-zip-women.png',
 }
 
+const PAYMENT_LOGOS = {
+  Revolut: '/images/payments/revolut.svg',
+  Cards: '/images/payments/visa.svg',
+  'Google Pay': '/images/payments/google-pay.svg',
+  'Cash App': '/images/payments/cash-app.svg',
+  PayPal: '/images/payments/paypal.svg',
+  Venmo: '/images/payments/venmo.svg',
+  Zelle: '/images/payments/zelle.svg',
+  Bitcoin: '/images/payments/bitcoin.svg',
+  'Apple Pay': '/images/payments/apple-pay.svg',
+  Chime: '/images/payments/chime.svg',
+  'Bank Transfer': '/images/payments/bank-transfer.svg',
+  Cryptocurrency: '/images/payments/crypto.svg',
+  'Wire Transfer': '/images/payments/wire-transfer.svg',
+}
+
+export function paymentLogo(method) {
+  return PAYMENT_LOGOS[method] || null
+}
+
 export function productImage(product) {
   if (product.image) return product.image
 

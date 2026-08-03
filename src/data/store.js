@@ -140,6 +140,9 @@ export const STORE_INFO = {
   locations: ['California, USA', 'Vilnius, Lithuania'],
   facebook: '',
   paymentMethods: [
+    'Revolut',
+    'Cards',
+    'Google Pay',
     'Cash App',
     'PayPal',
     'Venmo',

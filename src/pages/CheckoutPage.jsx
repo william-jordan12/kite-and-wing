@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { STORE_INFO } from '../data/store'
+import { paymentLogo } from '../utils/placeholder'
 import { useCart } from '../context/CartContext.jsx'
 import { saveOrder } from '../utils/order.js'
 
@@ -111,6 +112,9 @@ export default function CheckoutPage() {
                   checked={form.paymentMethod === method}
                   onChange={() => setField('paymentMethod', method)}
                 />
+                {paymentLogo(method) && (
+                  <img className="payment-logo" src={paymentLogo(method)} alt={method} />
+                )}
                 <span>{method}</span>
               </label>
             ))}

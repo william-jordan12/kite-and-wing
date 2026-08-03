@@ -63,7 +63,7 @@ export default function ProductPage() {
 
           <ul className="product-perks">
             <li>Ships from California, USA or Vilnius, Lithuania</li>
-            <li>Pay by Cash App, PayPal, Venmo, Zelle, Bitcoin and more</li>
+            <li>Pay by Revolut, Cards, Google Pay, PayPal, Venmo and more</li>
             <li>14-day returns on unused gear</li>
           </ul>
         </div>
