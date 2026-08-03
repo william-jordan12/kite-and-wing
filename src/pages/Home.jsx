@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
-import { CATEGORIES, getProductsByCategory } from '../data/store'
+import { CATEGORIES } from '../data/store'
+import { useProducts } from '../context/ProductsContext.jsx'
 import ProductGrid from '../components/ProductGrid.jsx'
 
 export default function Home() {
+  const { byCategory } = useProducts()
   return (
     <div className="home">
       <section className="hero">
@@ -45,7 +47,7 @@ export default function Home() {
               View all
             </Link>
           </div>
-          <ProductGrid products={getProductsByCategory(cat.id).slice(0, 4)} />
+          <ProductGrid products={byCategory(cat.id).slice(0, 4)} />
         </section>
       ))}
 

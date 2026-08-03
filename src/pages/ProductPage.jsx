@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getProduct, formatPrice, getProductsByCategory } from '../data/store'
+import { formatPrice } from '../data/store'
+import { useProducts } from '../context/ProductsContext.jsx'
 import { productImage } from '../utils/placeholder.js'
 import { useCart } from '../context/CartContext.jsx'
 import ProductGrid from '../components/ProductGrid.jsx'
 
 export default function ProductPage() {
   const { productId } = useParams()
+  const { getProduct, byCategory } = useProducts()
   const product = getProduct(productId)
   const { addItem } = useCart()
   const [qty, setQty] = useState(1)
@@ -23,7 +25,7 @@ export default function ProductPage() {
     )
   }
 
-  const related = getProductsByCategory(product.category).filter((p) => p.id !== product.id).slice(0, 4)
+  const related = byCategory(product.category).filter((p) => p.id !== product.id).slice(0, 4)
 
   const handleAdd = () => {
     addItem(product.id, qty)
@@ -40,7 +42,9 @@ export default function ProductPage() {
         <div className="product-detail-info">
           <span className="product-brand">{product.brand}</span>
           <h1>{product.name}</h1>
-          <span className="product-type">{product.type} &middot; {product.size}</span>
+          <span className="product-type">
+            {product.type} &middot; {product.size}
+          </span>
           <p className="product-detail-price">{formatPrice(product.price)}</p>
           <p className="product-description">{product.description}</p>
 

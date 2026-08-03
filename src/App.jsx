@@ -11,6 +11,8 @@ import PaymentPage from './pages/PaymentPage.jsx'
 import ConfirmationPage from './pages/ConfirmationPage.jsx'
 import ReviewsPage from './pages/ReviewsPage.jsx'
 import FaqPage from './pages/FaqPage.jsx'
+import AdminLogin from './pages/admin/AdminLogin.jsx'
+import AdminDashboard from './pages/admin/AdminDashboard.jsx'
 
 export default function App() {
   return (
@@ -28,6 +30,8 @@ export default function App() {
           <Route path="/confirmation" element={<ConfirmationPage />} />
           <Route path="/reviews" element={<ReviewsPage />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
       </main>
       <Footer />

@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { getOrder, clearOrder } from '../utils/order.js'
 import { buildOrderMessage, whatsappLink, mailtoLink } from '../utils/message.js'
+import { saveOrder } from '../api.js'
 import { useCart } from '../context/CartContext.jsx'
 
 export default function ConfirmationPage() {
@@ -9,6 +10,16 @@ export default function ConfirmationPage() {
   const order = getOrder()
   const { clear } = useCart()
   const [copied, setCopied] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const posted = useRef(false)
+
+  useEffect(() => {
+    if (!order || posted.current) return
+    posted.current = true
+    saveOrder(order)
+      .then(() => setSaved(true))
+      .catch(() => setSaved(false))
+  }, [order])
 
   if (!order) {
     return (
@@ -61,6 +72,7 @@ export default function ConfirmationPage() {
             request below and send it to us via{' '}
             {channel === 'whatsapp' ? 'WhatsApp' : 'email'} to receive payment details.
           </p>
+          {saved && <span className="order-saved">Order received &middot; we&apos;ll reply shortly.</span>}
         </div>
 
         <div className="order-text-wrap">

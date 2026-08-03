@@ -1,10 +1,12 @@
 import { useParams, useSearchParams, Link } from 'react-router-dom'
-import { getCategory, getProductsByCategory } from '../data/store'
+import { getCategory } from '../data/store'
+import { useProducts } from '../context/ProductsContext.jsx'
 import ProductGrid from '../components/ProductGrid.jsx'
 
 export default function CategoryPage() {
   const { categoryId } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
+  const { byCategory, byBrand } = useProducts()
   const category = getCategory(categoryId)
 
   if (!category) {
@@ -19,8 +21,7 @@ export default function CategoryPage() {
   }
 
   const activeBrand = searchParams.get('brand')
-  const products = getProductsByCategory(category.id)
-  const shown = activeBrand ? products.filter((p) => p.brand === activeBrand) : products
+  const shown = activeBrand ? byBrand(category.id, activeBrand) : byCategory(category.id)
 
   const selectBrand = (brand) => {
     setSearchParams(brand ? { brand } : {})

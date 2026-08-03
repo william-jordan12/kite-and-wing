@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { getProduct } from '../data/store'
+import { useProducts } from './ProductsContext.jsx'
 
 const CartContext = createContext(null)
 
@@ -16,10 +16,13 @@ function load() {
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState(load)
+  const { products } = useProducts()
 
   useEffect(() => {
     localStorage.setItem(KEY, JSON.stringify(items))
   }, [items])
+
+  const getProduct = (id) => products.find((p) => p.id === id)
 
   const addItem = (productId, qty = 1) => {
     setItems((prev) => {
@@ -47,16 +50,15 @@ export function CartProvider({ children }) {
 
   const total = useMemo(
     () => items.reduce((s, i) => s + i.qty * (getProduct(i.productId)?.price || 0), 0),
-    [items]
+    [items, products]
   )
 
   const detail = useMemo(
     () =>
-      items.map((i) => ({
-        ...i,
-        product: getProduct(i.productId),
-      })),
-    [items]
+      items
+        .map((i) => ({ ...i, product: getProduct(i.productId) }))
+        .filter((i) => i.product),
+    [items, products]
   )
 
   return (
