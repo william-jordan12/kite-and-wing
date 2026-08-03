@@ -14,7 +14,33 @@ const TYPES = {
   sail: 'SAIL',
 }
 
+const REAL_IMAGES = {
+  'Rebel D/LAB 2025': '/images/products/rebel-dlab-2025.png',
+  'Neo D/LAB 2025': '/images/products/neo-dlab-2025.png',
+  'Mono 2025': '/images/products/mono-2025.png',
+  'Neo 2025': '/images/products/neo-2025.png',
+  'TS Freestyle SLS 2025': '/images/products/ts-freestyle-sls-2025.png',
+  'TS Park 2025': '/images/products/ts-park-2025.png',
+  'Boardbag Single Surf 2024': '/images/products/boardbag-single-surf-2024.png',
+  'Boardbag Single Compact 2025': '/images/products/boardbag-single-compact-2025.png',
+  'Traction Pad SLS Front 2025': '/images/products/traction-pad-sls-front-2025.png',
+  'Traction Pad Team Front': '/images/products/traction-pad-team-front.png',
+  'Mast-Fuselage Set Slim AL QM': '/images/products/mast-fuselage-slim-al-qm.png',
+  'Foil Set Complete AL Surf': '/images/products/foil-set-al-surf.png',
+  'Foil Set Complete AL GT': '/images/products/foil-set-al-gt.png',
+  'Foil Set Complete AL Freeride': '/images/products/foil-set-al-freeride.png',
+  'Cap New Era Adjustable UNDYED': '/images/products/cap-new-era-undyed.png',
+  'Wing Set Surf': '/images/products/wing-set-surf.png',
+  'Tank Duotone Women': '/images/products/tank-women.png',
+  'Mast-Fuselage Set AL 3.0 90/67': '/images/products/mast-fuselage-3.0-90-67.png',
+  'Mast-Fuselage Set AL 3.0 75/67': '/images/products/mast-fuselage-3.0-75-67.png',
+  'Hoody Team Zip Women': '/images/products/hoody-team-zip-women.png',
+}
+
 export function productImage(product) {
+  const real = REAL_IMAGES[product.name]
+  if (real) return real
+
   const [c1, c2] = PALETTES[product.category] || ['#6366f1', '#4338ca']
   const label = TYPES[product.type.toLowerCase()] || product.type.toUpperCase()
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
