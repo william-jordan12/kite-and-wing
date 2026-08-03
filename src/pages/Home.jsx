@@ -15,11 +15,7 @@ const FEATURED_IDS = [
   'supermodel',
 ]
 
-const HERO_CTA = [
-  { to: '/shop/kiteboarding', label: 'Kiteboarding' },
-  { to: '/shop/windsurfing', label: 'Windsurfing' },
-  { to: '/shop/wing-foiling', label: 'Wing Foiling' },
-]
+const HERO_CTA = [{ to: '/shop/kiteboarding', label: 'Shop Now' }]
 
 const TILE_TEXT = {
   kiteboarding:
@@ -50,19 +46,21 @@ export default function Home() {
         />
         <div className="hero-stage__inner">
           <span className="hero-stage__topline">
-            Kiteboarding &middot; Wing &amp; Foiling &middot; Windsurfing
+            Kiteboarding &middot; Wing Foiling &middot; Windsurfing
           </span>
-          <h1>
-            True kiteboarding. True windsurfing. True wing &amp; foiling.
-          </h1>
+          <h1>Official dealer of the world&apos;s leading performance brands.</h1>
           <p className="hero-stage__subline">
-            Premium gear from the leading brands on the water. Hand-picked, tested by riders and
-            shipped fast from California and Vilnius to your door.
+            Duotone &middot; Core &middot; Ozone &middot; F-ONE &middot; Cabrinha &middot; Naish &middot;
+            North &middot; Armstrong &middot; Sabfoil &middot; Slingshot &middot; Reedin &middot;
+            Eleveight &middot; Airush &middot; AK Durable Supply
+          </p>
+          <p className="hero-stage__promo">
+            Premium gear &middot; Trusted quality &middot; Worldwide shipping
           </p>
           <div className="hero-stage__actions">
             {HERO_CTA.map((cta) => (
-              <Link key={cta.to} to={cta.to} className="btn btn-ghost">
-                Shop {cta.label}
+              <Link key={cta.to} to={cta.to} className="btn btn-accent">
+                {cta.label}
               </Link>
             ))}
           </div>

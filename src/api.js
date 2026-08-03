@@ -24,14 +24,14 @@ export const createProduct = (product, token) =>
   request('/products', { method: 'POST', body: JSON.stringify(product), headers: { Authorization: `Bearer ${token}` } })
 
 export const updateProduct = (id, product, token) =>
-  request(`/products/${encodeURIComponent(id)}`, {
+  request(`/products?id=${encodeURIComponent(id)}`, {
     method: 'PUT',
     body: JSON.stringify(product),
     headers: { Authorization: `Bearer ${token}` },
   })
 
 export const deleteProduct = (id, token) =>
-  request(`/products/${encodeURIComponent(id)}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+  request(`/products?id=${encodeURIComponent(id)}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
 
 export const getOrders = (token) =>
   request('/orders', { headers: { Authorization: `Bearer ${token}` } })

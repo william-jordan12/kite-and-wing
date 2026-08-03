@@ -253,6 +253,17 @@ h6 {
   color: #fff;
 }
 
+.btn-accent {
+  background: rgb(var(--color-yellow));
+  border-color: rgb(var(--color-yellow));
+  color: rgb(var(--color-black));
+}
+
+.btn-accent:hover {
+  background: rgb(var(--color-yellow-dark));
+  border-color: rgb(var(--color-yellow-dark));
+}
+
 .btn-sm {
   padding: 11px 24px;
   font-size: var(--text-xxs);
@@ -606,6 +617,15 @@ h6 {
   font-size: var(--text-lg);
   color: rgba(255, 255, 255, 0.85);
   max-width: 560px;
+}
+
+.hero-stage__promo {
+  margin-top: 12px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--color-yellow));
 }
 
 .hero-stage__actions {
