@@ -26,7 +26,12 @@ export default function AdminDashboard() {
   const [tab, setTab] = useState('products')
   const [products, setProducts] = useState([])
   const [orders, setOrders] = useState([])
-  const [settingsForm, setSettingsForm] = useState({})
+  const [settingsForm, setSettingsForm] = useState(() => ({
+    email: settings.email || '',
+    whatsapp: settings.whatsapp || '',
+    locations: Array.isArray(settings.locations) ? settings.locations.join('\n') : '',
+    facebook: settings.facebook || '',
+  }))
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(EMPTY)
   const [message, setMessage] = useState('')
@@ -99,10 +104,13 @@ export default function AdminDashboard() {
     setMessage('')
     try {
       const payload = {
-        email: settingsForm.email.trim(),
-        whatsapp: settingsForm.whatsapp.trim(),
-        locations: settingsForm.locations.split('\n').map((l) => l.trim()).filter(Boolean),
-        facebook: settingsForm.facebook.trim(),
+        email: (settingsForm.email || '').trim(),
+        whatsapp: (settingsForm.whatsapp || '').trim(),
+        locations: (settingsForm.locations || '')
+          .split('\n')
+          .map((l) => l.trim())
+          .filter(Boolean),
+        facebook: (settingsForm.facebook || '').trim(),
       }
       const updated = await updateSettings(payload, token)
       setSettings(updated)
