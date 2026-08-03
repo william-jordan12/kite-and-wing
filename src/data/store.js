@@ -139,6 +139,7 @@ export const STORE_INFO = {
   whatsapp: '+15551234567',
   locations: ['California, USA', 'Vilnius, Lithuania'],
   facebook: '',
+  instagram: '',
   paymentMethods: [
     'Revolut',
     'Cards',

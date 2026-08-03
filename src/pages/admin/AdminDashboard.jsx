@@ -34,6 +34,7 @@ export default function AdminDashboard() {
     whatsapp: settings.whatsapp || '',
     locations: Array.isArray(settings.locations) ? settings.locations.join('\n') : '',
     facebook: settings.facebook || '',
+    instagram: settings.instagram || '',
   }))
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(EMPTY)
@@ -65,6 +66,7 @@ export default function AdminDashboard() {
         whatsapp: data.whatsapp || '',
         locations: Array.isArray(data.locations) ? data.locations.join('\n') : '',
         facebook: data.facebook || '',
+        instagram: data.instagram || '',
       })
     } catch (e) {
       setError(e.message)
@@ -212,6 +214,7 @@ export default function AdminDashboard() {
           .map((l) => l.trim())
           .filter(Boolean),
         facebook: (settingsForm.facebook || '').trim(),
+        instagram: (settingsForm.instagram || '').trim(),
       }
       const updated = await updateSettings(payload, token)
       setSettings(updated)
@@ -476,6 +479,14 @@ export default function AdminDashboard() {
                   value={settingsForm.facebook || ''}
                   onChange={(e) => changeSetting('facebook', e.target.value)}
                   placeholder="https://facebook.com/yourpage"
+                />
+              </div>
+              <div className="field">
+                <label>Instagram link</label>
+                <input
+                  value={settingsForm.instagram || ''}
+                  onChange={(e) => changeSetting('instagram', e.target.value)}
+                  placeholder="https://instagram.com/yourpage"
                 />
               </div>
               <div className="field">

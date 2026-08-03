@@ -1,7 +1,7 @@
 import pool from './_db.js'
 import { requireAuth, readBody } from './_auth.js'
 
-const VALID = ['email', 'whatsapp', 'locations', 'facebook']
+const VALID = ['email', 'whatsapp', 'locations', 'facebook', 'instagram']
 
 function publicSettings(rows) {
   const obj = {}

@@ -51,8 +51,8 @@ export const REVIEWS = [
 
 export const FAQS = [
   {
-    q: 'Do you ship to both the USA and Lithuania?',
-    a: 'Yes. We operate from two locations — California, USA and Vilnius, Lithuania — and ship from the warehouse closest to you.',
+    q: 'Do you ship from both the USA and Lithuania?',
+    a: 'Yes. We dispatch orders from two warehouses — California, USA and Vilnius, Lithuania — and always ship from whichever warehouse is closest to you. We deliver to destinations worldwide, not only to these two countries.',
   },
   {
     q: 'How do I pay for my order?',
