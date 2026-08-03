@@ -44,6 +44,17 @@ export const getSettings = () => request('/settings')
 export const updateSettings = (settings, token) =>
   request('/settings', { method: 'PUT', body: JSON.stringify(settings), headers: { Authorization: `Bearer ${token}` } })
 
+export const recordVisit = (payload) => request('/visit', { method: 'POST', body: JSON.stringify(payload) })
+
+export const getVisits = (token) =>
+  request('/visits', { headers: { Authorization: `Bearer ${token}` } })
+
+export const markVisitsRead = (token) =>
+  request('/visits', { method: 'POST', body: JSON.stringify({ read: true }), headers: { Authorization: `Bearer ${token}` } })
+
+export const changePassword = (payload, token) =>
+  request('/change-password', { method: 'POST', body: JSON.stringify(payload), headers: { Authorization: `Bearer ${token}` } })
+
 const TOKEN_KEY = 'kws_admin_token'
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY)

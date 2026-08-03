@@ -5,6 +5,9 @@ import products from '../api/products.js'
 import productItem from '../api/products/[id].js'
 import orders from '../api/orders.js'
 import settings from '../api/settings.js'
+import visit from '../api/visit.js'
+import visits from '../api/visits.js'
+import changePassword from '../api/change-password.js'
 
 const server = http.createServer(async (req, res) => {
   const raw = await new Promise((resolve) => {
@@ -23,6 +26,9 @@ const server = http.createServer(async (req, res) => {
   else if (path.startsWith('/api/products/')) handler = productItem
   else if (path === '/api/orders') handler = orders
   else if (path === '/api/settings') handler = settings
+  else if (path === '/api/visit' && method === 'POST') handler = visit
+  else if (path === '/api/visits') handler = visits
+  else if (path === '/api/change-password' && method === 'POST') handler = changePassword
 
   if (!handler) {
     res.statusCode = 404
@@ -135,6 +141,49 @@ server.listen(port, async () => {
 
     r = await call('/settings', { method: 'PUT', headers: {} })
     log('PUT settings no-auth', { status: r.status, data: r.data && r.data.error })
+
+    r = await call('/visit', {
+      method: 'POST',
+      body: JSON.stringify({ path: '/', referrer: 'http://example.com', userAgent: 'test-agent' }),
+    })
+    log('POST visit', { status: r.status, data: r.data && r.data.ok })
+
+    r = await call('/visits', { headers: auth })
+    log('GET visits', {
+      status: r.status,
+      data: { count: r.data?.visits?.length, unread: r.data?.unread },
+    })
+
+    r = await call('/visits')
+    log('GET visits no-auth', { status: r.status, data: r.data && r.data.error })
+
+    r = await call('/change-password', {
+      method: 'POST',
+      headers: auth,
+      body: JSON.stringify({ currentPassword: process.env.ADMIN_PASSWORD, newPassword: 'newpass123' }),
+    })
+    log('POST change-password', { status: r.status, data: r.data && r.data.ok })
+
+    r = await call('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: process.env.ADMIN_USER, password: 'newpass123' }),
+    })
+    log('login new pw', { status: r.status, data: { token: (r.data.token || '').slice(0, 20) + '...' } })
+
+    r = await call('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: process.env.ADMIN_USER, password: process.env.ADMIN_PASSWORD }),
+    })
+    log('login old pw after change', { status: r.status, data: r.data && r.data.error })
+
+    r = await call('/change-password', {
+      method: 'POST',
+      headers: auth,
+      body: JSON.stringify({ currentPassword: 'newpass123', newPassword: 'short' }),
+    })
+    log('POST change-password too short', { status: r.status, data: r.data && r.data.error })
   } catch (err) {
     console.error('TEST FAILED:', err.message)
   } finally {

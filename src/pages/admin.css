@@ -185,11 +185,106 @@
 }
 
 .admin-settings {
-  max-width: 560px;
+  max-width: 680px;
+  display: grid;
+  gap: 18px;
 }
 
 .admin-settings .admin-form p.admin-sub {
   margin-bottom: 16px;
+}
+
+.admin-notify-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.admin-notify-head h2 {
+  margin-bottom: 0;
+}
+
+.visit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.visit-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.visit-item.is-new .visit-dot {
+  background: var(--primary);
+}
+
+.visit-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+  margin-top: 7px;
+  flex: none;
+}
+
+.visit-body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.visit-body strong {
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.pw-wrap {
+  position: relative;
+}
+
+.pw-wrap input {
+  padding-right: 44px;
+}
+
+.pw-toggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  padding: 8px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.pw-toggle:hover {
+  color: var(--ink);
 }
 
 .admin-order {

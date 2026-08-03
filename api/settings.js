@@ -3,15 +3,20 @@ import { requireAuth, readBody } from './_auth.js'
 
 const VALID = ['email', 'whatsapp', 'locations', 'facebook']
 
+function publicSettings(rows) {
+  const obj = {}
+  for (const row of rows) {
+    if (row.key.startsWith('admin_')) continue
+    obj[row.key] = row.value
+  }
+  return obj
+}
+
 export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       const result = await pool.query('SELECT key, value FROM settings')
-      const obj = {}
-      for (const row of result.rows) {
-        obj[row.key] = row.value
-      }
-      res.json(obj)
+      res.json(publicSettings(result.rows))
       return
     }
 
@@ -39,9 +44,5 @@ const authedPut = requireAuth(async (req, res) => {
     }
   }
   const result = await pool.query('SELECT key, value FROM settings')
-  const obj = {}
-  for (const row of result.rows) {
-    obj[row.key] = row.value
-  }
-  res.json(obj)
+  res.json(publicSettings(result.rows))
 })

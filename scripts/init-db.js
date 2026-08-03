@@ -47,6 +47,18 @@ await client.query(`
   );
 `)
 
+await client.query(`
+  CREATE TABLE IF NOT EXISTS visits (
+    id BIGSERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    path TEXT,
+    referrer TEXT,
+    user_agent TEXT,
+    ip TEXT,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE
+  );
+`)
+
 const defaults = {
   email: 'kiteandwindsupply@gmail.com',
   whatsapp: '+15551234567',

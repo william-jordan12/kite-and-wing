@@ -10,6 +10,9 @@ import {
   getOrders,
   getSettings,
   updateSettings,
+  getVisits,
+  markVisitsRead,
+  changePassword,
 } from '../../api.js'
 import { CATEGORIES, formatPrice } from '../../data/store.js'
 import { useProducts } from '../../context/ProductsContext.jsx'
@@ -36,12 +39,19 @@ export default function AdminDashboard() {
   const [form, setForm] = useState(EMPTY)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [visits, setVisits] = useState([])
+  const [unread, setUnread] = useState(0)
+  const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirm: '' })
+  const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false })
 
   useEffect(() => {
     if (!token) return
     loadProducts()
     loadOrders()
     loadSettings()
+    loadVisits()
+    const id = setInterval(loadVisits, 30000)
+    return () => clearInterval(id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
@@ -75,6 +85,64 @@ export default function AdminDashboard() {
     } catch (e) {
       setError(e.message)
     }
+  }
+
+  const loadVisits = async () => {
+    try {
+      const data = await getVisits(token)
+      setVisits(data.visits)
+      setUnread(data.unread)
+    } catch {
+      // ignore polling failures
+    }
+  }
+
+  const markAllRead = async () => {
+    try {
+      await markVisitsRead(token)
+      setUnread(0)
+      setVisits((v) => v.map((x) => ({ ...x, is_read: true })))
+    } catch (e) {
+      setError(e.message)
+    }
+  }
+
+  const changePwField = (field, value) => setPwForm((f) => ({ ...f, [field]: value }))
+
+  const togglePw = (field) => setShowPw((s) => ({ ...s, [field]: !s[field] }))
+
+  const savePassword = async (ev) => {
+    ev.preventDefault()
+    setError('')
+    setMessage('')
+    if (pwForm.newPassword.length < 8) {
+      setError('New password must be at least 8 characters.')
+      return
+    }
+    if (pwForm.newPassword !== pwForm.confirm) {
+      setError('New password and confirmation do not match.')
+      return
+    }
+    try {
+      await changePassword(
+        { currentPassword: pwForm.currentPassword, newPassword: pwForm.newPassword },
+        token
+      )
+      setPwForm({ currentPassword: '', newPassword: '', confirm: '' })
+      setMessage('Password updated. Use it on your next login.')
+    } catch (e) {
+      setError(e.message)
+    }
+  }
+
+  const timeAgo = (iso) => {
+    const diff = Date.now() - new Date(iso).getTime()
+    const min = Math.floor(diff / 60000)
+    if (min < 1) return 'just now'
+    if (min < 60) return `${min}m ago`
+    const hr = Math.floor(min / 60)
+    if (hr < 24) return `${hr}h ago`
+    return `${Math.floor(hr / 24)}d ago`
   }
 
   const logout = () => {
@@ -169,7 +237,7 @@ export default function AdminDashboard() {
           Orders ({orders.length})
         </button>
         <button className={tab === 'settings' ? 'tab-active' : ''} onClick={() => setTab('settings')}>
-          Store settings
+          Settings{unread > 0 && <span className="badge">{unread}</span>}
         </button>
       </div>
 
@@ -358,8 +426,126 @@ export default function AdminDashboard() {
               </div>
             </form>
           </div>
+
+          <div className="admin-form">
+            <div className="admin-notify-head">
+              <h2>Visitor notifications</h2>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={markAllRead} disabled={!unread}>
+                Mark all as read
+              </button>
+            </div>
+            <p className="admin-sub">New visits to your site. Refreshes automatically.</p>
+            {!visits.length ? (
+              <p className="admin-sub">No visits recorded yet.</p>
+            ) : (
+              <ul className="visit-list">
+                {visits.map((v) => (
+                  <li key={v.id} className={`visit-item ${v.is_read ? '' : 'is-new'}`}>
+                    <span className="visit-dot" />
+                    <div className="visit-body">
+                      <strong>{v.path}</strong>
+                      <span className="admin-sub">{timeAgo(v.created_at)}</span>
+                      {v.referrer && <span className="admin-sub">via {v.referrer}</span>}
+                      {v.ip && <span className="admin-sub">{v.ip}</span>}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="admin-form">
+            <h2>Change password</h2>
+            <p className="admin-sub">Updates your admin password immediately.</p>
+            <form onSubmit={savePassword}>
+              <div className="field">
+                <label>Current password</label>
+                <div className="pw-wrap">
+                  <input
+                    type={showPw.current ? 'text' : 'password'}
+                    value={pwForm.currentPassword}
+                    onChange={(e) => changePwField('currentPassword', e.target.value)}
+                    autoComplete="current-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="pw-toggle"
+                    aria-label={showPw.current ? 'Hide password' : 'Show password'}
+                    onClick={() => togglePw('current')}
+                  >
+                    <EyeIcon off={showPw.current} />
+                  </button>
+                </div>
+              </div>
+              <div className="field">
+                <label>New password</label>
+                <div className="pw-wrap">
+                  <input
+                    type={showPw.next ? 'text' : 'password'}
+                    value={pwForm.newPassword}
+                    onChange={(e) => changePwField('newPassword', e.target.value)}
+                    autoComplete="new-password"
+                    minLength={8}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="pw-toggle"
+                    aria-label={showPw.next ? 'Hide password' : 'Show password'}
+                    onClick={() => togglePw('next')}
+                  >
+                    <EyeIcon off={showPw.next} />
+                  </button>
+                </div>
+              </div>
+              <div className="field">
+                <label>Confirm new password</label>
+                <div className="pw-wrap">
+                  <input
+                    type={showPw.confirm ? 'text' : 'password'}
+                    value={pwForm.confirm}
+                    onChange={(e) => changePwField('confirm', e.target.value)}
+                    autoComplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="pw-toggle"
+                    aria-label={showPw.confirm ? 'Hide password' : 'Show password'}
+                    onClick={() => togglePw('confirm')}
+                  >
+                    <EyeIcon off={showPw.confirm} />
+                  </button>
+                </div>
+              </div>
+              <div className="admin-actions">
+                <button type="submit" className="btn btn-primary">
+                  Update password
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
+  )
+}
+
+function EyeIcon({ off }) {
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {off ? (
+        <>
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+          <line x1="1" y1="1" x2="23" y2="23" />
+        </>
+      ) : (
+        <>
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+          <circle cx="12" cy="12" r="3" />
+        </>
+      )}
+    </svg>
   )
 }

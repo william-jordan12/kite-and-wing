@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import PublicLayout from './components/PublicLayout.jsx'
+import VisitorTracker from './components/VisitorTracker.jsx'
 import Home from './pages/Home.jsx'
 import CategoryPage from './pages/CategoryPage.jsx'
 import ProductPage from './pages/ProductPage.jsx'
@@ -17,6 +18,7 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
+      <VisitorTracker />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
