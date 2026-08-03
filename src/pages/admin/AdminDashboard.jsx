@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import {
   getToken,
@@ -44,6 +44,10 @@ export default function AdminDashboard() {
   const [unread, setUnread] = useState(0)
   const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirm: '' })
   const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false })
+  const [toast, setToast] = useState('')
+  const lastUnread = useRef(0)
+  const firstPoll = useRef(true)
+  const toastTimer = useRef(null)
 
   useEffect(() => {
     if (!token) return
@@ -52,7 +56,10 @@ export default function AdminDashboard() {
     loadSettings()
     loadVisits()
     const id = setInterval(loadVisits, 30000)
-    return () => clearInterval(id)
+    return () => {
+      clearInterval(id)
+      if (toastTimer.current) window.clearTimeout(toastTimer.current)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
@@ -93,7 +100,17 @@ export default function AdminDashboard() {
     try {
       const data = await getVisits(token)
       setVisits(data.visits)
-      setUnread(data.unread)
+      const unreadCount = data.unread
+      if (firstPoll.current) {
+        firstPoll.current = false
+      } else if (unreadCount > lastUnread.current) {
+        const diff = unreadCount - lastUnread.current
+        setToast(`Someone just visited your site${diff > 1 ? ` (${diff} new visits)` : ''}`)
+        if (toastTimer.current) window.clearTimeout(toastTimer.current)
+        toastTimer.current = window.setTimeout(() => setToast(''), 5000)
+      }
+      lastUnread.current = unreadCount
+      setUnread(unreadCount)
     } catch {
       // ignore polling failures
     }
@@ -103,6 +120,7 @@ export default function AdminDashboard() {
     try {
       await markVisitsRead(token)
       setUnread(0)
+      lastUnread.current = 0
       setVisits((v) => v.map((x) => ({ ...x, is_read: true })))
     } catch (e) {
       setError(e.message)
@@ -272,13 +290,25 @@ export default function AdminDashboard() {
         <button className={tab === 'orders' ? 'tab-active' : ''} onClick={() => setTab('orders')}>
           Orders ({orders.length})
         </button>
+        <button
+          className={tab === 'notifications' ? 'tab-active' : ''}
+          onClick={() => setTab('notifications')}
+        >
+          Notifications{unread > 0 && <span className="badge">{unread}</span>}
+        </button>
         <button className={tab === 'settings' ? 'tab-active' : ''} onClick={() => setTab('settings')}>
-          Settings{unread > 0 && <span className="badge">{unread}</span>}
+          Settings
         </button>
       </div>
 
       {message && <p className="admin-msg">{message}</p>}
       {error && <p className="field-error">{error}</p>}
+      {toast && (
+        <div className="admin-toast" role="status">
+          <span className="admin-toast__dot" />
+          {toast}
+        </div>
+      )}
 
       {tab === 'products' && (
         <div className="admin-products">
@@ -450,6 +480,40 @@ export default function AdminDashboard() {
         </div>
       )}
 
+      {tab === 'notifications' && (
+        <div className="admin-notifications">
+          <div className="admin-form">
+            <div className="admin-notify-head">
+              <h2>Visitor notifications</h2>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={markAllRead} disabled={!unread}>
+                Mark all as read
+              </button>
+            </div>
+            <p className="admin-sub">
+              Live visitor alerts — every time someone enters your site a new notification appears here and
+              you get an instant alert. Refreshes automatically.
+            </p>
+            {!visits.length ? (
+              <p className="admin-sub">No visits recorded yet.</p>
+            ) : (
+              <ul className="visit-list">
+                {visits.map((v) => (
+                  <li key={v.id} className={`visit-item ${v.is_read ? '' : 'is-new'}`}>
+                    <span className="visit-dot" />
+                    <div className="visit-body">
+                      <strong>{v.path}</strong>
+                      <span className="admin-sub">{timeAgo(v.created_at)}</span>
+                      {v.referrer && <span className="admin-sub">via {v.referrer}</span>}
+                      {v.ip && <span className="admin-sub">{v.ip}</span>}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
+
       {tab === 'settings' && (
         <div className="admin-settings">
           <div className="admin-form">
@@ -504,33 +568,6 @@ export default function AdminDashboard() {
                 </button>
               </div>
             </form>
-          </div>
-
-          <div className="admin-form">
-            <div className="admin-notify-head">
-              <h2>Visitor notifications</h2>
-              <button type="button" className="btn btn-secondary btn-sm" onClick={markAllRead} disabled={!unread}>
-                Mark all as read
-              </button>
-            </div>
-            <p className="admin-sub">New visits to your site. Refreshes automatically.</p>
-            {!visits.length ? (
-              <p className="admin-sub">No visits recorded yet.</p>
-            ) : (
-              <ul className="visit-list">
-                {visits.map((v) => (
-                  <li key={v.id} className={`visit-item ${v.is_read ? '' : 'is-new'}`}>
-                    <span className="visit-dot" />
-                    <div className="visit-body">
-                      <strong>{v.path}</strong>
-                      <span className="admin-sub">{timeAgo(v.created_at)}</span>
-                      {v.referrer && <span className="admin-sub">via {v.referrer}</span>}
-                      {v.ip && <span className="admin-sub">{v.ip}</span>}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
 
           <div className="admin-form">
