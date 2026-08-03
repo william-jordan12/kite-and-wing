@@ -68,7 +68,7 @@ export default function Home() {
       </section>
 
       <section className="section">
-        <h2 className="section-title section-title--center">The world of Kite &amp; Wind Supply</h2>
+        <h2 className="section-title section-title--center">The world of Kite &amp; Wing Supply</h2>
         <div className="promise">
           <p>
             Welcome to a world where water is our stage and nature is our temple. We are a small

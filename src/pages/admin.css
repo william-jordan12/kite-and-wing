@@ -31,7 +31,9 @@
 
 .admin-login__logo {
   display: block;
-  height: 56px;
+  max-height: 64px;
+  max-width: 220px;
+  height: auto;
   width: auto;
   margin: 0 auto;
 }

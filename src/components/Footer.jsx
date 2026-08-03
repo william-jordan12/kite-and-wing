@@ -12,13 +12,7 @@ export default function Footer() {
       <div className="container">
         <div className="footer__grid">
           <div className="footer__brand">
-            <div className="footer__brand-lockup">
-              <img src="/logo.svg" alt="Kite and Wind Supply logo" className="footer__logo" />
-              <span className="footer__brand-text">
-                <span className="logo-kite">Kite &amp; Wind</span>
-                <span className="logo-sub">SUPPLY</span>
-              </span>
-            </div>
+            <img src="/logo.jpg" alt="Kite and Wing Supply logo" className="footer__logo" />
             <p className="footer__claim">
               True kiteboarding. True windsurfing. True wing &amp; foiling.
             </p>
@@ -98,7 +92,7 @@ export default function Footer() {
         </div>
 
         <div className="footer__bottom">
-          &copy; {new Date().getFullYear()} {settings.name || 'Kite and Wind Supply'}. All rights reserved.
+          &copy; {new Date().getFullYear()} {settings.name || 'Kite and Wing Supply'}. All rights reserved.
           {' · '}
           <Link to="/faq">Shipping &amp; Returns</Link>
           {' · '}

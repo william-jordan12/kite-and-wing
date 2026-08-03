@@ -8,7 +8,7 @@ export default function FaqPage() {
     <div className="page">
       <div className="page-head">
         <h1>Frequently asked questions</h1>
-        <p>Everything you need to know about ordering from Kite and Wind Supply.</p>
+        <p>Everything you need to know about ordering from Kite and Wing Supply.</p>
       </div>
 
       <div className="faq-list">

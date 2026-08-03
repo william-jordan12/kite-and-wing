@@ -99,10 +99,8 @@ export default function Header() {
             </Link>
           </nav>
 
-          <Link to="/" className="logo" onClick={close} aria-label="Kite and Wind Supply home">
-            <img src="/logo.svg" alt="" className="logo-mark" />
-            <span className="logo-kite">Kite &amp; Wind</span>
-            <span className="logo-sub">SUPPLY</span>
+          <Link to="/" className="logo" onClick={close} aria-label="Kite and Wing Supply home">
+            <img src="/logo.jpg" alt="Kite and Wing Supply" className="logo-mark" />
           </Link>
 
           <div className="navbar__actions">

@@ -21,7 +21,7 @@ export default function ChatWidget() {
         <div className="chat-panel">
           <div className="chat-header">
             <div>
-              <strong>Kite &amp; Wind — Help</strong>
+              <strong>Kite &amp; Wing — Help</strong>
               <span>Quick answers to common questions</span>
             </div>
             <button className="chat-close" aria-label="Close chat" onClick={() => setOpen(false)}>

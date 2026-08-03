@@ -1,7 +1,7 @@
 export const ABOUT_STORY = {
   claim: 'True kiteboarding. True windsurfing. True wing &amp; foiling.',
   intro:
-    'Kite & Wind Supply was born on the water. What started as two riders — one on the California coast, one on the Baltic — trading gear, tips and road-trip stories grew into a shop built around one simple idea: the best gear, tested by people who actually ride it.',
+    'Kite & Wing Supply was born on the water. What started as two riders — one on the California coast, one on the Baltic — trading gear, tips and road-trip stories grew into a shop built around one simple idea: the best gear, tested by people who actually ride it.',
   paragraphs: [
     'We ride almost every single day. Kites, wings and sails are not products to us — they are the reason we get up in the morning. Every item we sell is tested on the water before it ever reaches our shop, and we only carry brands we trust with our own gear.',
     'Because we operate from two locations, we are not tied to one side of the ocean. Our stock moves between our warehouse in California, USA and our warehouse in Vilnius, Lithuania, so riders in America and Europe get their gear fast, with honest shipping costs and no customs surprises.',

@@ -59,7 +59,7 @@ export const PRODUCTS = [
 ]
 
 export const STORE_INFO = {
-  name: 'Kite and Wind Supply',
+  name: 'Kite and Wing Supply',
   email: 'kiteandwindsupply@gmail.com',
   whatsapp: '+15551234567',
   locations: ['California, USA', 'Vilnius, Lithuania'],
