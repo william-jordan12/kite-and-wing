@@ -39,6 +39,11 @@ export const getOrders = (token) =>
 export const saveOrder = (order) =>
   request('/orders', { method: 'POST', body: JSON.stringify(order) })
 
+export const getSettings = () => request('/settings')
+
+export const updateSettings = (settings, token) =>
+  request('/settings', { method: 'PUT', body: JSON.stringify(settings), headers: { Authorization: `Bearer ${token}` } })
+
 const TOKEN_KEY = 'kws_admin_token'
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY)

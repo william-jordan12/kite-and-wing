@@ -66,6 +66,7 @@ export const STORE_INFO = {
   email: 'kiteandwindsupply@gmail.com',
   whatsapp: '+15551234567',
   locations: ['California, USA', 'Vilnius, Lithuania'],
+  facebook: '',
   paymentMethods: [
     'Cash App',
     'PayPal',

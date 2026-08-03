@@ -40,6 +40,28 @@ await client.query(`
   );
 `)
 
+await client.query(`
+  CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value JSONB NOT NULL
+  );
+`)
+
+const defaults = {
+  email: 'kiteandwindsupply@gmail.com',
+  whatsapp: '+15551234567',
+  locations: ['California, USA', 'Vilnius, Lithuania'],
+  facebook: '',
+}
+
+for (const [key, value] of Object.entries(defaults)) {
+  await client.query(
+    `INSERT INTO settings (key, value) VALUES ($1, $2)
+     ON CONFLICT (key) DO NOTHING`,
+    [key, JSON.stringify(value)]
+  )
+}
+
 for (const p of PRODUCTS) {
   await client.query(
     `INSERT INTO products (id, name, brand, category, type, size, price, description)

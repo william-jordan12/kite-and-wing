@@ -4,6 +4,7 @@ import login from '../api/login.js'
 import * as products from '../api/products.js'
 import * as productItem from '../api/products/[id].js'
 import * as orders from '../api/orders.js'
+import * as settings from '../api/settings.js'
 
 function makeReq(res, rawUrl, method, headers = {}, body = null) {
   const url = new URL(rawUrl, 'http://localhost')
@@ -60,6 +61,8 @@ const server = http.createServer(async (req, res) => {
   else if (path.startsWith('/api/products/') && method === 'DELETE') handler = productItem.DELETE
   else if (path === '/api/orders' && method === 'GET') handler = orders.GET
   else if (path === '/api/orders' && method === 'POST') handler = orders.POST
+  else if (path === '/api/settings' && method === 'GET') handler = settings.GET
+  else if (path === '/api/settings' && method === 'PUT') handler = settings.PUT
 
   if (!handler) {
     res.statusCode = 404
@@ -153,6 +156,20 @@ server.listen(port, async () => {
 
     r = await fetch(`${base}/products`, {})
     log('GET products no-auth', { status: r.status, data: (await r.json()).error })
+
+    r = await fetch(`${base}/settings`, {})
+    const settingsBefore = await r.json()
+    log('GET settings', { status: r.status, data: settingsBefore })
+
+    r = await fetch(`${base}/settings`, {
+      method: 'PUT',
+      headers: auth,
+      body: JSON.stringify({ facebook: 'https://facebook.com/test', email: 'kiteandwindsupply@gmail.com' }),
+    })
+    log('PUT settings', r)
+
+    r = await fetch(`${base}/settings`, { method: 'PUT', headers: {} })
+    log('PUT settings no-auth', { status: r.status, data: (await r.json()).error })
   } catch (err) {
     console.error('TEST FAILED:', err.message)
   } finally {

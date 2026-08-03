@@ -8,9 +8,12 @@ import {
   updateProduct,
   deleteProduct,
   getOrders,
+  getSettings,
+  updateSettings,
 } from '../../api.js'
 import { CATEGORIES, formatPrice } from '../../data/store.js'
 import { useProducts } from '../../context/ProductsContext.jsx'
+import { useSettings } from '../../context/SettingsContext.jsx'
 import '../admin.css'
 
 const EMPTY = { id: '', name: '', brand: '', category: 'kiteboarding', type: '', size: '', price: '', description: '' }
@@ -19,9 +22,11 @@ export default function AdminDashboard() {
   const token = getToken()
   const navigate = useNavigate()
   const { reload } = useProducts()
+  const { settings, setSettings } = useSettings()
   const [tab, setTab] = useState('products')
   const [products, setProducts] = useState([])
   const [orders, setOrders] = useState([])
+  const [settingsForm, setSettingsForm] = useState({})
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(EMPTY)
   const [message, setMessage] = useState('')
@@ -31,10 +36,25 @@ export default function AdminDashboard() {
     if (!token) return
     loadProducts()
     loadOrders()
+    loadSettings()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
   if (!token) return <Navigate to="/admin" replace />
+
+  const loadSettings = async () => {
+    try {
+      const data = await getSettings()
+      setSettingsForm({
+        email: data.email || '',
+        whatsapp: data.whatsapp || '',
+        locations: Array.isArray(data.locations) ? data.locations.join('\n') : '',
+        facebook: data.facebook || '',
+      })
+    } catch (e) {
+      setError(e.message)
+    }
+  }
 
   const loadProducts = async () => {
     try {
@@ -70,6 +90,27 @@ export default function AdminDashboard() {
   }
 
   const change = (field, value) => setForm((f) => ({ ...f, [field]: value }))
+
+  const changeSetting = (field, value) => setSettingsForm((f) => ({ ...f, [field]: value }))
+
+  const saveSettings = async (ev) => {
+    ev.preventDefault()
+    setError('')
+    setMessage('')
+    try {
+      const payload = {
+        email: settingsForm.email.trim(),
+        whatsapp: settingsForm.whatsapp.trim(),
+        locations: settingsForm.locations.split('\n').map((l) => l.trim()).filter(Boolean),
+        facebook: settingsForm.facebook.trim(),
+      }
+      const updated = await updateSettings(payload, token)
+      setSettings(updated)
+      setMessage('Store settings saved.')
+    } catch (e) {
+      setError(e.message)
+    }
+  }
 
   const save = async (ev) => {
     ev.preventDefault()
@@ -118,6 +159,9 @@ export default function AdminDashboard() {
         </button>
         <button className={tab === 'orders' ? 'tab-active' : ''} onClick={() => setTab('orders')}>
           Orders ({orders.length})
+        </button>
+        <button className={tab === 'settings' ? 'tab-active' : ''} onClick={() => setTab('settings')}>
+          Store settings
         </button>
       </div>
 
@@ -256,6 +300,56 @@ export default function AdminDashboard() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {tab === 'settings' && (
+        <div className="admin-settings">
+          <div className="admin-form">
+            <h2>Store settings</h2>
+            <p className="admin-sub">These appear on the site, in emails, and on the payment request.</p>
+            <form onSubmit={saveSettings}>
+              <div className="field">
+                <label>Order email</label>
+                <input
+                  type="email"
+                  value={settingsForm.email || ''}
+                  onChange={(e) => changeSetting('email', e.target.value)}
+                  placeholder="kiteandwindsupply@gmail.com"
+                />
+              </div>
+              <div className="field">
+                <label>WhatsApp number</label>
+                <input
+                  value={settingsForm.whatsapp || ''}
+                  onChange={(e) => changeSetting('whatsapp', e.target.value)}
+                  placeholder="+15551234567"
+                />
+              </div>
+              <div className="field">
+                <label>Facebook link</label>
+                <input
+                  value={settingsForm.facebook || ''}
+                  onChange={(e) => changeSetting('facebook', e.target.value)}
+                  placeholder="https://facebook.com/yourpage"
+                />
+              </div>
+              <div className="field">
+                <label>Locations (one per line)</label>
+                <textarea
+                  rows="3"
+                  value={settingsForm.locations || ''}
+                  onChange={(e) => changeSetting('locations', e.target.value)}
+                  placeholder={'California, USA\nVilnius, Lithuania'}
+                />
+              </div>
+              <div className="admin-actions">
+                <button type="submit" className="btn btn-primary">
+                  Save settings
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

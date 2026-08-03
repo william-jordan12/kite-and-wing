@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
-import { CATEGORIES, STORE_INFO } from '../data/store'
+import { CATEGORIES } from '../data/store'
+import { useSettings } from '../context/SettingsContext.jsx'
 
 export default function Footer() {
+  const { settings } = useSettings()
+
   return (
     <footer className="footer">
       <div className="footer-grid">
@@ -26,14 +29,19 @@ export default function Footer() {
         </div>
         <div>
           <h4>Contact</h4>
-          <a href={`mailto:${STORE_INFO.email}`}>{STORE_INFO.email}</a>
-          {STORE_INFO.locations.map((loc) => (
+          <a href={`mailto:${settings.email}`}>{settings.email}</a>
+          {settings.facebook && (
+            <a href={settings.facebook} target="_blank" rel="noopener noreferrer">
+              Facebook
+            </a>
+          )}
+          {settings.locations?.map((loc) => (
             <span key={loc}>{loc}</span>
           ))}
         </div>
       </div>
       <p className="footer-bottom">
-        &copy; {new Date().getFullYear()} {STORE_INFO.name}. All rights reserved.
+        &copy; {new Date().getFullYear()} {settings.name || 'Kite and Wind Supply'}. All rights reserved.
       </p>
     </footer>
   )

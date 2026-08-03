@@ -184,6 +184,14 @@
   gap: 14px;
 }
 
+.admin-settings {
+  max-width: 560px;
+}
+
+.admin-settings .admin-form p.admin-sub {
+  margin-bottom: 16px;
+}
+
 .admin-order {
   background: #fff;
   border: 1px solid var(--line);

@@ -61,14 +61,14 @@ On **Vercel**: Project → Settings → Environment Variables — add the four v
 
 ## Store configuration
 
-Edit `src/data/store.js`:
+Business details (order email, WhatsApp number, locations, Facebook link) are now editable in **Admin → Store settings** and stored in Neon. The static defaults live in `src/data/store.js`:
 
 | Setting | What it controls |
 | --- | --- |
-| `STORE_INFO.email` | Order email address |
-| `STORE_INFO.whatsapp` | WhatsApp number for the "Send via WhatsApp" link — **replace the placeholder** `+15551234567` |
 | `STORE_INFO.paymentMethods` | Payment methods shown at checkout |
 | `CATEGORIES` | Navigation + brand filters (seeded brands used by the admin form) |
+
+>`STORE_INFO.email`, `STORE_INFO.whatsapp`, `STORE_INFO.locations` and `STORE_INFO.facebook` are only offline fallbacks — change them in the admin dashboard.
 
 ## Order flow
 

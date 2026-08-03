@@ -1,6 +1,4 @@
-import { STORE_INFO } from '../data/store'
-
-export function buildOrderMessage(order) {
+export function buildOrderMessage(order, email) {
   const items = order.items
     .map(
       (i) =>
@@ -10,7 +8,7 @@ export function buildOrderMessage(order) {
     )
     .join('\n')
 
-  return `To: ${STORE_INFO.email}
+  return `To: ${email}
 Subject: Online payment request — order of $${order.total.toLocaleString('en-US', {
     minimumFractionDigits: 2,
   })}
@@ -24,15 +22,13 @@ My email: ${order.email}
 Please send me your payment details so I can complete this order. Thank you!`
 }
 
-export function whatsappLink(message) {
-  return `https://wa.me/${STORE_INFO.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`
+export function whatsappLink(message, whatsapp) {
+  return `https://wa.me/${String(whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(message)}`
 }
 
-export function mailtoLink(message) {
+export function mailtoLink(message, email) {
   const firstLine = message.split('\n')[0]
   const subject = firstLine.replace(/^To: /, '')
   const body = message.split('\n').slice(2).join('\n')
-  return `mailto:${STORE_INFO.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-    body
-  )}`
+  return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }

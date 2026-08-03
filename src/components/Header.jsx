@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { CATEGORIES } from '../data/store'
 import { useCart } from '../context/CartContext.jsx'
+import { useSettings } from '../context/SettingsContext.jsx'
 
 export default function Header() {
   const [open, setOpen] = useState(false)
   const { count } = useCart()
+  const { settings } = useSettings()
   const location = useLocation()
 
   useEffect(() => {
@@ -20,10 +22,8 @@ export default function Header() {
   return (
     <header className="header">
       <div className="topbar">
-        <span>
-          Shipping from {`California, USA`} &amp; {`Vilnius, Lithuania`}
-        </span>
-        <a href="mailto:kiteandwindsupply@gmail.com">kiteandwindsupply@gmail.com</a>
+        <span>Shipping from {settings.locations?.join(' & ') || 'our locations'}</span>
+        <a href={`mailto:${settings.email}`}>{settings.email}</a>
       </div>
 
       <div className="header-main">

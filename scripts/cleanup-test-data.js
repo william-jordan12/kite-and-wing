@@ -8,6 +8,7 @@ const client = new Client({
 })
 
 await client.connect()
-const r = await client.query("DELETE FROM orders WHERE email = 'test@example.com'")
-console.log('deleted test orders:', r.rowCount)
+await client.query("DELETE FROM orders WHERE email = 'test@example.com'")
+await client.query(`UPDATE settings SET value = '""' WHERE key = 'facebook'`)
+console.log('cleaned test data')
 await client.end()

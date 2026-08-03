@@ -4,11 +4,13 @@ import { getOrder, clearOrder } from '../utils/order.js'
 import { buildOrderMessage, whatsappLink, mailtoLink } from '../utils/message.js'
 import { saveOrder } from '../api.js'
 import { useCart } from '../context/CartContext.jsx'
+import { useSettings } from '../context/SettingsContext.jsx'
 
 export default function ConfirmationPage() {
   const location = useLocation()
   const order = getOrder()
   const { clear } = useCart()
+  const { settings } = useSettings()
   const [copied, setCopied] = useState(false)
   const [saved, setSaved] = useState(false)
   const posted = useRef(false)
@@ -35,7 +37,7 @@ export default function ConfirmationPage() {
   }
 
   const channel = location.state?.channel || 'email'
-  const message = buildOrderMessage(order)
+  const message = buildOrderMessage(order, settings.email)
   const total = order.total.toLocaleString('en-US', { minimumFractionDigits: 2 })
 
   const handleCopy = async () => {
@@ -53,7 +55,12 @@ export default function ConfirmationPage() {
   }
 
   const handleSend = () => {
-    window.open(channel === 'whatsapp' ? whatsappLink(message) : mailtoLink(message), '_blank')
+    window.open(
+      channel === 'whatsapp'
+        ? whatsappLink(message, settings.whatsapp)
+        : mailtoLink(message, settings.email),
+      '_blank'
+    )
   }
 
   const handleDone = () => {
