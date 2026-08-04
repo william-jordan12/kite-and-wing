@@ -229,4 +229,170 @@ export const CATEGORY_GUIDES = {
     { type: 'p', text: 'Ride farther. Jump higher. Discover more.' },
     { type: 'p', text: 'Your next adventure starts here.' },
   ],
+  'wing-foiling': [
+    { type: 'kicker', text: 'WING & FOILING GEARS' },
+    { type: 'lead', text: 'Wing Foiling – The Future of Watersports' },
+    { type: 'h2', text: 'Discover the World of Wing Foiling' },
+    {
+      type: 'p',
+      text: 'Wing foiling is one of the fastest-growing watersports in the world, combining the freedom of wind-powered riding with the smooth, floating sensation of hydrofoiling. Using a handheld inflatable wing and a hydrofoil mounted beneath the board, riders lift above the water, creating an incredibly quiet, efficient, and exhilarating experience.',
+    },
+    {
+      type: 'p',
+      text: "Whether you're a complete beginner looking for a new challenge or an experienced watersports enthusiast, wing foiling offers endless opportunities for adventure, progression, and exploration in a wide range of wind and water conditions.",
+    },
+    { type: 'h2', text: 'Why Choose Wing Foiling?' },
+    {
+      type: 'p',
+      text: "Wing foiling is more than a sport—it's a lifestyle that combines innovation, freedom, fitness, and a passion for the outdoors.",
+    },
+    { type: 'h3', text: '1. Ride in Almost Any Conditions' },
+    {
+      type: 'p',
+      text: 'One of the biggest advantages of wing foiling is its ability to perform in lighter winds than many traditional watersports. Riders can enjoy smooth sessions on oceans, lakes, rivers, and bays with remarkable efficiency.',
+    },
+    { type: 'h3', text: '2. Easy to Learn and Progress' },
+    {
+      type: 'p',
+      text: 'Modern equipment has made wing foiling more accessible than ever. Beginners can learn the fundamentals with stable boards and larger wings, while advanced riders continue progressing into high-speed cruising, wave riding, freestyle, racing, and downwind adventures.',
+    },
+    { type: 'h3', text: '3. Freedom Like No Other' },
+    {
+      type: 'p',
+      text: 'As the hydrofoil lifts the board above the water, drag is greatly reduced, creating a unique sensation of flying silently over the surface with incredible speed and control.',
+    },
+    { type: 'h2', text: 'Essential Wing Foiling Equipment' },
+    {
+      type: 'p',
+      text: 'Choosing quality equipment is the key to enjoying safe, efficient, and fun sessions.',
+    },
+    { type: 'h3', text: 'Wings' },
+    {
+      type: 'p',
+      text: 'The wing provides the power needed to move across the water. Available in different sizes and designs, wings are built for freeride, waves, racing, freestyle, and light-wind performance.',
+    },
+    { type: 'h3', text: 'Foil Boards' },
+    {
+      type: 'p',
+      text: 'Wing foil boards provide stability during takeoff and smooth control while flying. Different sizes are available for beginners, intermediate riders, and advanced foilers.',
+    },
+    { type: 'h3', text: 'Hydrofoils' },
+    { type: 'p', text: 'The hydrofoil consists of several components working together:' },
+    {
+      type: 'ul',
+      items: [
+        'Front Wing – Generates lift and determines speed, stability, and maneuverability.',
+        'Rear Stabilizer – Provides balance and control.',
+        'Mast – Connects the foil to the board and affects performance in different conditions.',
+        'Fuselage – Links the front wing, stabilizer, and mast into one complete system.',
+      ],
+    },
+    { type: 'h3', text: 'Leashes and Safety Equipment' },
+    {
+      type: 'p',
+      text: 'Board leashes, wing leashes, helmets, impact vests, wetsuits, and personal flotation devices help maximize safety and confidence on the water.',
+    },
+    { type: 'h3', text: 'Accessories' },
+    {
+      type: 'p',
+      text: 'Complete your setup with pumps, board bags, foil covers, replacement parts, repair kits, and travel accessories.',
+    },
+    { type: 'h2', text: 'Riding Styles' },
+    { type: 'p', text: 'Wing foiling offers a wide variety of disciplines to suit every rider.' },
+    {
+      type: 'h3',
+      text: 'Freeride',
+      children: 'Cruise comfortably across flat water or open ocean while enjoying smooth, effortless flight.',
+    },
+    {
+      type: 'h3',
+      text: 'Wave Riding',
+      children: 'Use ocean swell and breaking waves to carve powerful turns while maintaining excellent control.',
+    },
+    {
+      type: 'h3',
+      text: 'Freestyle',
+      children: 'Perform jumps, spins, rotations, and technical tricks using the wing and foil together.',
+    },
+    {
+      type: 'h3',
+      text: 'Racing',
+      children: 'Designed for speed, efficiency, and maximum upwind and downwind performance.',
+    },
+    {
+      type: 'h3',
+      text: 'Downwind Foiling',
+      children: 'Ride endless ocean swells with minimal effort, covering long distances while staying effortlessly on foil.',
+    },
+    { type: 'h2', text: 'Choosing the Right Equipment' },
+    { type: 'p', text: 'The ideal setup depends on several factors:' },
+    {
+      type: 'ul',
+      items: ['Rider weight', 'Experience level', 'Wind strength', 'Water conditions', 'Riding style', 'Local conditions'],
+    },
+    {
+      type: 'p',
+      text: 'Selecting the correct board volume, wing size, mast length, and foil combination helps maximize performance, stability, and progression.',
+    },
+    { type: 'h2', text: 'Leading Wing Foiling Brands' },
+    {
+      type: 'p',
+      text: "Today's wing foiling industry features many world-class manufacturers known for quality, innovation, and performance. Riders can choose equipment from trusted brands such as Duotone, Armstrong, F-ONE, North Foils, Cabrinha, Naish, Slingshot, Ozone, Core, Ensis, Fanatic, AK Durable Supply Co., SABFOIL, Axis Foils, Lift Foils, Indiana Paddle & Surf, and Gong.",
+    },
+    { type: 'h2', text: 'Safety First' },
+    { type: 'p', text: 'Safe riding begins before entering the water. Always:' },
+    {
+      type: 'ul',
+      items: [
+        'Check wind and weather conditions.',
+        'Wear appropriate safety gear.',
+        'Inspect your equipment before every session.',
+        "Learn from qualified instructors if you're new to the sport.",
+        'Respect local riding zones and other water users.',
+        'Stay within your skill level.',
+      ],
+    },
+    {
+      type: 'p',
+      text: 'Responsible riding helps keep everyone safe while protecting access to local beaches and waterways.',
+    },
+    { type: 'h2', text: 'Join the Global Wing Foiling Community' },
+    {
+      type: 'p',
+      text: "Wing foiling has quickly grown into a worldwide community of passionate riders exploring coastlines, lakes, and open oceans together. Whether you're chasing flat-water cruising, carving waves, racing friends, or embarking on long-distance downwind adventures, there's always a new challenge waiting.",
+    },
+    {
+      type: 'p',
+      text: 'Every session offers an opportunity to improve your skills, discover new locations, and enjoy the incredible feeling of flying above the water.',
+    },
+    { type: 'h2', text: 'Why Shop With Us?' },
+    {
+      type: 'p',
+      text: "We provide premium wing foiling equipment from the world's leading brands, helping riders of every experience level find the perfect setup. We offer:",
+    },
+    {
+      type: 'ul',
+      items: [
+        'Premium Wing Foiling Equipment',
+        'Leading Global Brands',
+        'Expert Product Advice',
+        'Fast Worldwide Shipping',
+        'Secure Payment Options',
+        'Genuine Products',
+        'Reliable Customer Support',
+        'After-Sales Service',
+      ],
+    },
+    { type: 'h2', text: 'Start Your Wing Foiling Adventure Today' },
+    {
+      type: 'p',
+      text: 'From your very first flight to advanced wave riding and long-distance downwind adventures, wing foiling delivers an unmatched sense of freedom and excitement.',
+    },
+    {
+      type: 'p',
+      text: "Explore our complete collection of wings, foil boards, hydrofoils, masts, stabilizers, fuselages, accessories, safety equipment, and replacement parts from the world's leading brands.",
+    },
+    { type: 'p', text: 'Fly above the water. Ride with confidence. Experience the future of watersports.' },
+    { type: 'p', text: 'Your next adventure starts here.' },
+  ],
 }
