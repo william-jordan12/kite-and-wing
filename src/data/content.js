@@ -64,7 +64,7 @@ export const FAQS = [
   },
   {
     q: 'How long does delivery take?',
-    a: 'Within the USA most orders arrive in 3–5 business days. Orders to Europe typically arrive in 5–10 business days after dispatch.',
+    a: 'It takes 3–5 days for your order to reach you after dispatch. Once your parcel leaves our warehouse you receive tracking details so you can follow it all the way.',
   },
   {
     q: 'Can I return or exchange a product?',
