@@ -17,6 +17,7 @@ export default function AboutPage() {
       <section className="section">
         <div className="promise">
           <h2 dangerouslySetInnerHTML={{ __html: ABOUT_STORY.claim }} />
+          <p>{ABOUT_STORY.tagline}</p>
         </div>
         <div className="about-grid">
           <div className="about-media">

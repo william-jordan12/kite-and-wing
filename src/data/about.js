@@ -1,10 +1,12 @@
 export const ABOUT_STORY = {
-  claim: 'True kiteboarding. True windsurfing. True wing &amp; foiling.',
+  claim: 'TRUE KITEBOARDING. TRUE WINDSURFING. TRUE WING &amp; FOILING.',
+  tagline: 'Premium Gear. Trusted Brands. Worldwide Delivery.',
   intro:
-    'Kite & Wing Supply was born on the water. What started as two riders — one on the California coast, one on the Baltic — trading gear, tips and road-trip stories grew into a shop built around one simple idea: the best gear, tested by people who actually ride it.',
+    'Kite & Wing Supply was founded by riders, for riders. What began as a passion for life on the water has grown into a trusted destination for premium equipment and expert support. We believe every rider—whether beginner or professional—deserves access to high-quality gear from the world&apos;s leading brands.',
   paragraphs: [
-    'We ride almost every single day. Kites, wings and sails are not products to us — they are the reason we get up in the morning. Every item we sell is tested on the water before it ever reaches our shop, and we only carry brands we trust with our own gear.',
-    'Because we operate from two locations, we are not tied to one side of the ocean. Our stock moves between our warehouse in California, USA and our warehouse in Vilnius, Lithuania, so riders in America and Europe get their gear fast, with honest shipping costs and no customs surprises.',
+    'Our mission is simple: provide authentic products, competitive prices, and outstanding customer service to help you get the most out of every session. From your first ride to your biggest achievements, we&apos;re here to support your journey every step of the way.',
+    'We proudly offer a carefully selected range of equipment for Kiteboarding, Wing Foiling, and Windsurfing, ensuring every product meets the highest standards of performance, durability, and reliability.',
+    'Whether you&apos;re chasing stronger winds, bigger waves, or smoother rides, Kite & Wing Supply is committed to helping you ride with confidence.',
   ],
   values: [
     {
