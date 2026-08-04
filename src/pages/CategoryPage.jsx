@@ -63,20 +63,29 @@ export default function CategoryPage() {
 
       {guide && (
         <section className="category-guide">
-          {guide.map((block, i) => {
-            if (block.type === 'kicker') {
-              return (
-                <span key={i} className="category-guide__kicker">
-                  {block.text}
-                </span>
-              )
-            }
-            if (block.type === 'lead') {
-              return (
-                <p key={i} className="category-guide__lead">
-                  {block.text}
-                </p>
-              )
+          <div className="category-guide__hero">
+            <div className="category-guide__hero-media">
+              <img src={guide.image} alt={category.name} />
+            </div>
+            <div className="category-guide__hero-body">
+              {guide.blocks
+                .filter((b) => b.type === 'kicker' || b.type === 'lead')
+                .map((block, i) =>
+                  block.type === 'kicker' ? (
+                    <span key={i} className="category-guide__kicker">
+                      {block.text}
+                    </span>
+                  ) : (
+                    <p key={i} className="category-guide__lead">
+                      {block.text}
+                    </p>
+                  )
+                )}
+            </div>
+          </div>
+          {guide.blocks.map((block, i) => {
+            if (block.type === 'kicker' || block.type === 'lead') {
+              return null
             }
             if (block.type === 'h2') {
               return (

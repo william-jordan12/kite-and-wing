@@ -65,7 +65,9 @@ export const CATEGORY_STORIES = {
 }
 
 export const CATEGORY_GUIDES = {
-  kiteboarding: [
+  kiteboarding: {
+    image: '/images/products/super-hero.png',
+    blocks: [
     { type: 'kicker', text: 'KITEBOARDING GEARS' },
     { type: 'lead', text: 'Kiteboarding – Experience the Power of Wind and Water' },
     { type: 'h2', text: 'Discover the World of Kiteboarding' },
@@ -228,8 +230,10 @@ export const CATEGORY_GUIDES = {
     },
     { type: 'p', text: 'Ride farther. Jump higher. Discover more.' },
     { type: 'p', text: 'Your next adventure starts here.' },
-  ],
-  'wing-foiling': [
+    ] },
+  'wing-foiling': {
+    image: '/images/products/unit-wing.png',
+    blocks: [
     { type: 'kicker', text: 'WING & FOILING GEARS' },
     { type: 'lead', text: 'Wing Foiling – The Future of Watersports' },
     { type: 'h2', text: 'Discover the World of Wing Foiling' },
@@ -394,8 +398,10 @@ export const CATEGORY_GUIDES = {
     },
     { type: 'p', text: 'Fly above the water. Ride with confidence. Experience the future of watersports.' },
     { type: 'p', text: 'Your next adventure starts here.' },
-  ],
-  windsurfing: [
+    ] },
+  windsurfing: {
+    image: '/images/products/ezzy-wave.jpg',
+    blocks: [
     { type: 'kicker', text: 'WINDSURFING GEARS' },
     { type: 'lead', text: 'Windsurfing – Harness the Wind, Master the Water' },
     { type: 'h2', text: 'Discover the World of Windsurfing' },
@@ -559,5 +565,5 @@ export const CATEGORY_GUIDES = {
     },
     { type: 'p', text: 'Ride with the wind. Explore every coastline. Experience the thrill of windsurfing.' },
     { type: 'p', text: 'Your next adventure starts here.' },
-  ],
+    ] },
 }
