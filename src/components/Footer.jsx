@@ -13,9 +13,6 @@ export default function Footer() {
         <div className="footer__grid">
           <div className="footer__brand">
             <img src="/logo.jpg" alt="Kite and Wing Supply logo" className="footer__logo" />
-            <p className="footer__claim">
-              True kiteboarding. True windsurfing. True wing &amp; foiling.
-            </p>
           </div>
 
           <div className="footer__columns">
