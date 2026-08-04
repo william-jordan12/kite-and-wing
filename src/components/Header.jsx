@@ -57,7 +57,6 @@ export default function Header() {
           </button>
 
           <nav id="main-nav" className={`main-nav ${open ? 'is-open' : ''}`}>
-            <SearchBar onSearch={close} />
             <Link
               to="/"
               className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
