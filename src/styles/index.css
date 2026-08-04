@@ -790,7 +790,7 @@ h6 {
 
 .story-tile {
   position: relative;
-  min-height: 420px;
+  min-height: 560px;
   display: flex;
   align-items: flex-end;
   color: #fff;
@@ -2437,6 +2437,9 @@ h6 {
 @media (max-width: 900px) {
   .story-tiles {
     grid-template-columns: 1fr;
+  }
+  .story-tile {
+    min-height: 480px;
   }
   .reviews-grid {
     grid-template-columns: repeat(2, 1fr);
