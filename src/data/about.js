@@ -60,7 +60,7 @@ export const CATEGORY_STORIES = {
     quote:
       'We were there when sails got battens, and later cambers. Windsurfing taught us what speed really means.',
     text: 'Sails, boards and rigs built for speed — from wave sailing to racing. Whether you chase the Baltic cross-off or the Pacific trade winds, we have the setup that matches the way you ride.',
-    image: '/images/products/ezzy-wave.jpg',
+    image: '/images/products/windsurfing.jpg',
   },
 }
 
@@ -400,7 +400,7 @@ export const CATEGORY_GUIDES = {
     { type: 'p', text: 'Your next adventure starts here.' },
     ] },
   windsurfing: {
-    image: '/images/products/ezzy-wave.jpg',
+    image: '/images/products/windsurfing.jpg',
     blocks: [
     { type: 'kicker', text: 'WINDSURFING GEARS' },
     { type: 'lead', text: 'Windsurfing – Harness the Wind, Master the Water' },

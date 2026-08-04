@@ -72,7 +72,7 @@ export default function Home() {
                 ? '/images/products/kiteboarding.jpg'
                 : cat.id === 'wing-foiling'
                   ? '/images/products/unit-wing.png'
-                  : '/images/products/ezzy-wave.jpg'
+                  : '/images/products/windsurfing.jpg'
             return (
               <Link to={`/shop/${cat.id}`} className="story-tile" key={cat.id}>
                 <div className="story-tile__bg" style={{ backgroundImage: `url(${image})` }} />
