@@ -69,7 +69,7 @@ export default function Home() {
           {CATEGORIES.map((cat) => {
             const image =
               cat.id === 'kiteboarding'
-                ? '/images/products/super-hero.png'
+                ? '/images/products/kiteboarding.jpg'
                 : cat.id === 'wing-foiling'
                   ? '/images/products/unit-wing.png'
                   : '/images/products/ezzy-wave.jpg'

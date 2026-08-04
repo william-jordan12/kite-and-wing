@@ -46,7 +46,7 @@ export const CATEGORY_STORIES = {
     quote:
       'From the first downwinders to the biggest big-air contests, kiteboarding is where we found our roots — and where we still test the limits.',
     text: 'Kites, control bars, twin-tips and harnesses from the world&apos;s best brands. We ride them in the waves, the chop and the gusts of the California coast so you get gear that is proven, not just popular.',
-    image: '/images/products/super-hero.png',
+    image: '/images/products/kiteboarding.jpg',
   },
   'wing-foiling': {
     headline: 'Wing &amp; Foiling',
@@ -66,7 +66,7 @@ export const CATEGORY_STORIES = {
 
 export const CATEGORY_GUIDES = {
   kiteboarding: {
-    image: '/images/products/super-hero.png',
+    image: '/images/products/kiteboarding.jpg',
     blocks: [
     { type: 'kicker', text: 'KITEBOARDING GEARS' },
     { type: 'lead', text: 'Kiteboarding – Experience the Power of Wind and Water' },
