@@ -395,4 +395,169 @@ export const CATEGORY_GUIDES = {
     { type: 'p', text: 'Fly above the water. Ride with confidence. Experience the future of watersports.' },
     { type: 'p', text: 'Your next adventure starts here.' },
   ],
+  windsurfing: [
+    { type: 'kicker', text: 'WINDSURFING GEARS' },
+    { type: 'lead', text: 'Windsurfing – Harness the Wind, Master the Water' },
+    { type: 'h2', text: 'Discover the World of Windsurfing' },
+    {
+      type: 'p',
+      text: "Windsurfing is one of the world's most iconic and rewarding watersports, combining the excitement of sailing and surfing into a single exhilarating experience. Using a sail mounted on a board, riders harness the power of the wind to glide across lakes, rivers, bays, and oceans, enjoying everything from relaxed cruising to high-speed racing and wave riding.",
+    },
+    {
+      type: 'p',
+      text: "Whether you're learning the basics or pushing your limits in challenging conditions, windsurfing offers endless opportunities for adventure, progression, and fun on the water.",
+    },
+    { type: 'h2', text: 'Why Choose Windsurfing?' },
+    {
+      type: 'p',
+      text: "Windsurfing is more than just a sport—it's a lifestyle built around freedom, exploration, and a passion for the wind.",
+    },
+    { type: 'h3', text: '1. Ride in a Variety of Conditions' },
+    {
+      type: 'p',
+      text: 'From calm inland lakes to powerful ocean waves, windsurfing can be enjoyed in a wide range of environments and wind strengths, making it one of the most versatile watersports.',
+    },
+    { type: 'h3', text: '2. Suitable for Every Skill Level' },
+    {
+      type: 'p',
+      text: 'Modern boards and rigs have made windsurfing more accessible than ever. Beginners benefit from stable, easy-to-control equipment, while experienced riders can enjoy advanced freeride, freestyle, slalom, wave, and racing disciplines.',
+    },
+    { type: 'h3', text: '3. Build Skills and Fitness' },
+    {
+      type: 'p',
+      text: 'Windsurfing develops balance, coordination, strength, endurance, and confidence while providing an exciting full-body workout in the outdoors.',
+    },
+    { type: 'h2', text: 'Essential Windsurfing Equipment' },
+    {
+      type: 'p',
+      text: 'The right equipment is essential for safety, comfort, and performance on the water.',
+    },
+    { type: 'h3', text: 'Windsurf Boards' },
+    {
+      type: 'p',
+      text: 'Boards are available in a variety of shapes and volumes to suit different riding styles and experience levels, from beginner-friendly models to high-performance race and wave boards.',
+    },
+    { type: 'h3', text: 'Sails' },
+    {
+      type: 'p',
+      text: 'The sail captures the wind and provides the power to move across the water. Different sail sizes and designs are optimized for varying wind strengths and riding disciplines.',
+    },
+    { type: 'h3', text: 'Masts' },
+    {
+      type: 'p',
+      text: 'A quality mast provides the flexibility and strength needed for efficient sail performance and responsive handling.',
+    },
+    { type: 'h3', text: 'Booms' },
+    {
+      type: 'p',
+      text: 'The boom allows riders to control the sail comfortably while maintaining balance and maneuverability throughout every session.',
+    },
+    { type: 'h3', text: 'Extensions and Base Systems' },
+    {
+      type: 'p',
+      text: 'These components securely connect the rig to the board while allowing proper sail tuning for changing conditions.',
+    },
+    { type: 'h3', text: 'Accessories' },
+    {
+      type: 'p',
+      text: 'Complete your setup with board bags, mast bags, harnesses, fins, wetsuits, helmets, impact vests, repair kits, and replacement parts.',
+    },
+    { type: 'h2', text: 'Windsurfing Disciplines' },
+    { type: 'p', text: 'Windsurfing offers something for every type of rider.' },
+    {
+      type: 'h3',
+      text: 'Freeride',
+      children: 'The perfect choice for recreational riders who enjoy comfortable cruising, speed, and all-around performance.',
+    },
+    {
+      type: 'h3',
+      text: 'Freestyle',
+      children: 'Perform spins, jumps, and technical tricks while maximizing board control and creativity.',
+    },
+    {
+      type: 'h3',
+      text: 'Wave Sailing',
+      children: 'Ride ocean waves using specialized equipment designed for carving turns and aerial maneuvers.',
+    },
+    {
+      type: 'h3',
+      text: 'Slalom',
+      children: 'Designed for speed and competition, slalom equipment delivers maximum performance in stronger winds.',
+    },
+    {
+      type: 'h3',
+      text: 'Formula and Foil Windsurfing',
+      children: 'Experience exceptional efficiency, speed, and upwind performance using larger sails and hydrofoil technology.',
+    },
+    { type: 'h2', text: 'Choosing the Right Equipment' },
+    { type: 'p', text: 'Selecting the ideal windsurfing setup depends on several factors:' },
+    {
+      type: 'ul',
+      items: ['Rider weight', 'Experience level', 'Wind conditions', 'Water conditions', 'Preferred riding style', 'Local sailing environment'],
+    },
+    {
+      type: 'p',
+      text: 'Using the right combination of board, sail, mast, boom, and fin helps maximize performance, comfort, and progression.',
+    },
+    { type: 'h2', text: 'Leading Windsurfing Brands' },
+    {
+      type: 'p',
+      text: 'The windsurfing industry is supported by many trusted manufacturers known for quality, innovation, and performance. Riders can choose from leading brands such as Duotone, Severne, NeilPryde, JP Australia, Starboard, Goya Windsurfing, Fanatic, Tabou, Ezzy Sails, Point-7, Loftsails, RRD, Patrik Boards, Simmer Style, Chinook Sailing Products, and Unifiber.',
+    },
+    { type: 'h2', text: 'Safety First' },
+    { type: 'p', text: 'Safe windsurfing begins before entering the water. Always:' },
+    {
+      type: 'ul',
+      items: [
+        'Check wind and weather forecasts.',
+        'Wear appropriate safety equipment.',
+        'Inspect your gear before every session.',
+        "Learn from qualified instructors if you're new to the sport.",
+        'Stay within your ability level.',
+        'Respect local waterways and other water users.',
+      ],
+    },
+    {
+      type: 'p',
+      text: 'Good preparation and responsible riding ensure safe and enjoyable sessions.',
+    },
+    { type: 'h2', text: 'Join the Global Windsurfing Community' },
+    {
+      type: 'p',
+      text: 'Windsurfing has inspired generations of riders around the world. From local beaches and lakes to world-famous windsurfing destinations, the sport brings together people who share a passion for wind, water, travel, and adventure.',
+    },
+    {
+      type: 'p',
+      text: 'Whether your goal is learning your first tack, mastering fast planing turns, riding waves, or competing at the highest level, windsurfing offers a lifetime of progression and unforgettable experiences.',
+    },
+    { type: 'h2', text: 'Why Shop With Us?' },
+    {
+      type: 'p',
+      text: "We offer premium windsurfing equipment from the world's leading brands, helping every rider find the perfect setup. We provide:",
+    },
+    {
+      type: 'ul',
+      items: [
+        'Premium Windsurfing Equipment',
+        'Leading Global Brands',
+        'Expert Product Advice',
+        'Fast Worldwide Shipping',
+        'Secure Payment Options',
+        'Genuine Products',
+        'Reliable Customer Support',
+        'After-Sales Service',
+      ],
+    },
+    { type: 'h2', text: 'Start Your Windsurfing Journey Today' },
+    {
+      type: 'p',
+      text: 'From your first lesson to advanced wave sessions and high-speed adventures, windsurfing offers an incredible combination of freedom, excitement, and performance.',
+    },
+    {
+      type: 'p',
+      text: "Explore our complete collection of windsurf boards, sails, masts, booms, fins, foils, harnesses, accessories, and replacement parts from the world's leading brands.",
+    },
+    { type: 'p', text: 'Ride with the wind. Explore every coastline. Experience the thrill of windsurfing.' },
+    { type: 'p', text: 'Your next adventure starts here.' },
+  ],
 }
