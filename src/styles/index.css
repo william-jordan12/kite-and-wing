@@ -445,6 +445,10 @@ h6 {
   position: relative;
 }
 
+.nav-caret {
+  display: none;
+}
+
 .nav-item:hover .dropdown {
   opacity: 1;
   visibility: visible;
@@ -2362,6 +2366,27 @@ h6 {
     font-size: 16px;
     color: #fff;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .nav-caret {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    margin-top: -4px;
+  }
+
+  .nav-item.is-open .nav-caret {
+    transform: rotate(-135deg);
+    margin-top: 4px;
   }
 
   .nav-link::after {
@@ -2374,13 +2399,21 @@ h6 {
 
   .dropdown {
     position: static;
-    opacity: 1;
-    visibility: visible;
+    opacity: 0;
+    visibility: hidden;
     transform: none;
     box-shadow: none;
     min-width: 0;
-    padding: 6px 0 12px 8px;
+    padding: 0;
     background: transparent;
+    display: none;
+  }
+
+  .nav-item.is-open .dropdown {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    padding: 6px 0 12px 8px;
   }
 
   .dropdown-title {
@@ -2403,24 +2436,7 @@ h6 {
 
 @media (max-width: 900px) {
   .story-tiles {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-  .story-tile {
-    min-height: 260px;
-  }
-  .story-tile__body {
-    padding: 18px 14px;
-  }
-  .story-tile__tag {
-    font-size: 9px;
-    margin-bottom: 8px;
-  }
-  .story-tile h3 {
-    font-size: 20px;
-  }
-  .story-tile p {
-    display: none;
+    grid-template-columns: 1fr;
   }
   .reviews-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2510,6 +2526,18 @@ h6 {
   }
   .hero-stage__subline {
     font-size: var(--text-base);
+  }
+  .story-tile {
+    min-height: 200px;
+  }
+  .story-tile__body {
+    padding: 14px 10px;
+  }
+  .story-tile h3 {
+    font-size: 15px;
+  }
+  .story-tile__link {
+    font-size: 10px;
   }
   .story-tile {
     min-height: 200px;

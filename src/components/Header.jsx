@@ -8,6 +8,7 @@ const TOOLBAR_BRANDS = ['Duotone', 'North', 'Cabrinha', 'Slingshot', 'Reedin', '
 
 export default function Header() {
   const [open, setOpen] = useState(false)
+  const [openCat, setOpenCat] = useState(null)
   const { count } = useCart()
   const location = useLocation()
 
@@ -19,6 +20,10 @@ export default function Header() {
   }, [open])
 
   const close = () => setOpen(false)
+
+  const toggleCat = (id) => {
+    setOpenCat((v) => (v === id ? null : id))
+  }
 
   return (
     <>
@@ -65,13 +70,21 @@ export default function Header() {
               Home
             </Link>
             {CATEGORIES.map((cat) => (
-              <div className="nav-item" key={cat.id}>
+              <div className={`nav-item ${openCat === cat.id ? 'is-open' : ''}`} key={cat.id}>
                 <NavLink
                   to={`/shop/${cat.id}`}
                   className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-                  onClick={close}
+                  onClick={(e) => {
+                    if (window.innerWidth <= 1100) {
+                      e.preventDefault()
+                      toggleCat(cat.id)
+                    } else {
+                      close()
+                    }
+                  }}
                 >
                   {cat.name}
+                  <span className="nav-caret" aria-hidden="true" />
                 </NavLink>
                 <div className="dropdown">
                   <p className="dropdown-title">Shop by brand</p>
@@ -85,6 +98,9 @@ export default function Header() {
                         {brand}
                       </Link>
                     ))}
+                    <Link to={`/shop/${cat.id}`} onClick={close}>
+                      All {cat.name}
+                    </Link>
                   </div>
                 </div>
               </div>
