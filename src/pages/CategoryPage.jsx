@@ -1,6 +1,6 @@
 import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { getCategory } from '../data/store'
-import { CATEGORY_STORIES } from '../data/about.js'
+import { CATEGORY_STORIES, CATEGORY_GUIDES } from '../data/about.js'
 import { useProducts } from '../context/ProductsContext.jsx'
 import ProductGrid from '../components/ProductGrid.jsx'
 
@@ -24,6 +24,7 @@ export default function CategoryPage() {
   const activeBrand = searchParams.get('brand')
   const shown = activeBrand ? byBrand(category.id, activeBrand) : []
   const story = CATEGORY_STORIES[category.id]
+  const guide = CATEGORY_GUIDES[category.id]
 
   const selectBrand = (brand) => {
     setSearchParams(brand ? { brand } : {})
@@ -39,7 +40,7 @@ export default function CategoryPage() {
         <p>{category.tagline}</p>
       </div>
 
-      {story && (
+      {story && !guide && (
         <div className="category-story">
           <div className="category-story__media">
             <img src={story.image} alt={category.name} />
@@ -58,6 +59,59 @@ export default function CategoryPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {guide && (
+        <section className="category-guide">
+          {guide.map((block, i) => {
+            if (block.type === 'kicker') {
+              return (
+                <span key={i} className="category-guide__kicker">
+                  {block.text}
+                </span>
+              )
+            }
+            if (block.type === 'lead') {
+              return (
+                <p key={i} className="category-guide__lead">
+                  {block.text}
+                </p>
+              )
+            }
+            if (block.type === 'h2') {
+              return (
+                <h2 key={i} className="category-guide__h2">
+                  {block.text}
+                </h2>
+              )
+            }
+            if (block.type === 'h3') {
+              return (
+                <div key={i} className="category-guide__h3-block">
+                  <h3 className="category-guide__h3">{block.text}</h3>
+                  {block.children && <p className="category-guide__p">{block.children}</p>}
+                </div>
+              )
+            }
+            if (block.type === 'ul') {
+              return (
+                <ul key={i} className="category-guide__list">
+                  {block.items.map((item, j) => (
+                    <li key={j}>{item}</li>
+                  ))}
+                </ul>
+              )
+            }
+            return (
+              <p key={i} className="category-guide__p">
+                {block.text}
+              </p>
+            )
+          })}
+          <a href="#products" className="btn btn-primary">
+            Shop the collection
+          </a>
+        </section>
       )}
 
       <div id="products" className="category-shop">
