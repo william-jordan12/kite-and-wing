@@ -2403,7 +2403,24 @@ h6 {
 
 @media (max-width: 900px) {
   .story-tiles {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .story-tile {
+    min-height: 260px;
+  }
+  .story-tile__body {
+    padding: 18px 14px;
+  }
+  .story-tile__tag {
+    font-size: 9px;
+    margin-bottom: 8px;
+  }
+  .story-tile h3 {
+    font-size: 20px;
+  }
+  .story-tile p {
+    display: none;
   }
   .reviews-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2493,6 +2510,18 @@ h6 {
   }
   .hero-stage__subline {
     font-size: var(--text-base);
+  }
+  .story-tile {
+    min-height: 200px;
+  }
+  .story-tile__body {
+    padding: 14px 10px;
+  }
+  .story-tile h3 {
+    font-size: 15px;
+  }
+  .story-tile__link {
+    font-size: 10px;
   }
   .product-grid {
     gap: 12px;
