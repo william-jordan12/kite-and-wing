@@ -66,6 +66,7 @@ export const STORE_INFO = {
   facebook: '',
   instagram: '',
   paymentMethods: [
+    'E-Transfer',
     'Revolut',
     'Cards',
     'Google Pay',

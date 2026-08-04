@@ -72,6 +72,7 @@ const REAL_IMAGES = {
 }
 
 const PAYMENT_LOGOS = {
+  'E-Transfer': '/images/payments/e-transfer.svg',
   Revolut: '/images/payments/revolut.svg',
   Cards: '/images/payments/visa.svg',
   'Google Pay': '/images/payments/google-pay.svg',
