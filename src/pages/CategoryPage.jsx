@@ -7,7 +7,7 @@ import ProductGrid from '../components/ProductGrid.jsx'
 export default function CategoryPage() {
   const { categoryId } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { byCategory, byBrand } = useProducts()
+  const { byBrand } = useProducts()
   const category = getCategory(categoryId)
 
   if (!category) {
@@ -22,7 +22,7 @@ export default function CategoryPage() {
   }
 
   const activeBrand = searchParams.get('brand')
-  const shown = activeBrand ? byBrand(category.id, activeBrand) : byCategory(category.id)
+  const shown = activeBrand ? byBrand(category.id, activeBrand) : []
   const story = CATEGORY_STORIES[category.id]
 
   const selectBrand = (brand) => {
@@ -60,14 +60,9 @@ export default function CategoryPage() {
         </div>
       )}
 
-      <div id="products">
+      <div id="products" className="category-shop">
         <div className="brand-filter">
-          <button
-            className={`chip ${!activeBrand ? 'chip-active' : ''}`}
-            onClick={() => selectBrand(null)}
-          >
-            All brands
-          </button>
+          <span className="brand-filter__label">Shop by brand</span>
           {category.brands.map((brand) => (
             <button
               key={brand}
@@ -79,12 +74,22 @@ export default function CategoryPage() {
           ))}
         </div>
 
-        <p className="result-count">
-          {shown.length} product{shown.length === 1 ? '' : 's'}
-          {activeBrand ? ` from ${activeBrand}` : ''}
-        </p>
-
-        <ProductGrid products={shown} />
+        {activeBrand ? (
+          <>
+            <p className="result-count">
+              {shown.length} product{shown.length === 1 ? '' : 's'} from {activeBrand}
+            </p>
+            <ProductGrid products={shown} />
+          </>
+        ) : (
+          <div className="brand-gate">
+            <h3>Choose a brand to see its products</h3>
+            <p>
+              Select one of the {category.brands.length} brands above to browse the {category.name}{' '}
+              range we carry.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

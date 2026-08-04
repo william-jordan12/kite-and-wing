@@ -501,6 +501,62 @@ h6 {
   flex-shrink: 0;
 }
 
+.search-form {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.search-form:focus-within {
+  border-color: var(--primary);
+}
+
+.search-form input {
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 9px 14px;
+  font-size: var(--text-sm);
+  color: rgb(var(--color-black));
+  min-width: 0;
+  width: 100%;
+}
+
+.search-form input::placeholder {
+  color: var(--ink-mute);
+}
+
+.search-form input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+.search-form button {
+  border: none;
+  background: transparent;
+  padding: 8px 12px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.search-form button:hover {
+  color: var(--primary);
+}
+
+.navbar__actions .search-form {
+  width: 240px;
+}
+
+.main-nav .search-form {
+  display: none;
+}
+
 .cart-link {
   position: relative;
   display: inline-flex;
@@ -970,8 +1026,40 @@ h6 {
 .brand-filter {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   margin-bottom: 20px;
+}
+
+.brand-filter__label {
+  font-size: var(--text-xxs);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-right: 6px;
+}
+
+.brand-gate {
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 56px 24px;
+  text-align: center;
+  color: var(--ink-mute);
+}
+
+.brand-gate h3 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.brand-gate p {
+  max-width: 420px;
+  margin: 0 auto;
+  font-size: var(--text-base);
 }
 
 .chip {
@@ -2217,6 +2305,10 @@ h6 {
     display: flex;
   }
 
+  .navbar__actions .search-form {
+    display: none;
+  }
+
   .nav-backdrop {
     display: block;
     position: fixed;
@@ -2249,6 +2341,16 @@ h6 {
     z-index: 65;
     transform: translateX(100%);
     transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .main-nav .search-form {
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .main-nav .search-form input {
+    color: rgb(var(--color-black));
   }
 
   .main-nav.is-open {

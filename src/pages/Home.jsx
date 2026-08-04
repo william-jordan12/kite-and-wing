@@ -1,19 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CATEGORIES, PRODUCTS, STORE_INFO } from '../data/store'
+import { CATEGORIES, STORE_INFO } from '../data/store'
 import { paymentLogo } from '../utils/placeholder.js'
-import ProductCard from '../components/ProductCard.jsx'
-
-const FEATURED_IDS = [
-  'rebel-2026',
-  'unit-wing',
-  'switchblade',
-  'xr7',
-  'orbit-2026',
-  'rally',
-  'super-hero',
-  'supermodel',
-]
 
 const HERO_CTA = [{ to: '/shop/kiteboarding', label: 'Shop Now' }]
 
@@ -29,8 +17,6 @@ const TILE_TEXT = {
 export default function Home() {
   const [email, setEmail] = useState('')
   const [done, setDone] = useState(false)
-
-  const featured = FEATURED_IDS.map((id) => PRODUCTS.find((p) => p.id === id)).filter(Boolean)
 
   const onSubscribe = (e) => {
     e.preventDefault()
@@ -110,20 +96,6 @@ export default function Home() {
             only carry gear we trust with our own lives — and we stand behind every single order with
             honest advice, fast shipping and a no-drama returns policy.
           </p>
-        </div>
-      </section>
-
-      <section className="section section--gray">
-        <div className="section-head">
-          <h2 className="section-title">New in</h2>
-          <Link to="/shop/kiteboarding" className="text-link">
-            View all products &rarr;
-          </Link>
-        </div>
-        <div className="product-grid">
-          {featured.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
         </div>
       </section>
 

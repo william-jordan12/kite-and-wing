@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { CATEGORIES } from '../data/store'
 import { useCart } from '../context/CartContext.jsx'
+import SearchBar from './SearchBar.jsx'
 
 const TOOLBAR_BRANDS = ['Duotone', 'North', 'Cabrinha', 'Slingshot', 'Reedin', 'F-One', 'Airush', 'Eleveight']
 
@@ -56,6 +57,7 @@ export default function Header() {
           </button>
 
           <nav id="main-nav" className={`main-nav ${open ? 'is-open' : ''}`}>
+            <SearchBar onSearch={close} />
             <Link
               to="/"
               className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
@@ -104,6 +106,7 @@ export default function Header() {
           </Link>
 
           <div className="navbar__actions">
+            <SearchBar onSearch={close} />
             <Link to="/cart" className="cart-link" aria-label="Cart" onClick={close}>
               <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6">
                 <path d="M6 6h15l-1.5 8.5a2 2 0 0 1-2 1.5H8.5a2 2 0 0 1-2-1.6L5 3H2" />

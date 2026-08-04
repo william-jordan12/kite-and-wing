@@ -4,6 +4,7 @@ import PublicLayout from './components/PublicLayout.jsx'
 import VisitorTracker from './components/VisitorTracker.jsx'
 import Home from './pages/Home.jsx'
 import CategoryPage from './pages/CategoryPage.jsx'
+import SearchPage from './pages/SearchPage.jsx'
 import ProductPage from './pages/ProductPage.jsx'
 import CartPage from './pages/CartPage.jsx'
 import CheckoutPage from './pages/CheckoutPage.jsx'
@@ -24,6 +25,7 @@ export default function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/shop/:categoryId" element={<CategoryPage />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/product/:productId" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
