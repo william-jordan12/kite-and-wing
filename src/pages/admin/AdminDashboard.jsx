@@ -310,6 +310,11 @@ export default function AdminDashboard() {
       const allImages = [form.image, ...form.images].filter(Boolean)
       const payload = {
         ...form,
+        id: (form.id || '').trim(),
+        name: (form.name || '').trim(),
+        brand: (form.brand || '').trim(),
+        type: (form.type || '').trim(),
+        size: (form.size || '').trim(),
         price: Number(form.price),
         priceEur: form.priceEur ? Number(form.priceEur) : null,
         image: form.image || allImages[0] || '',
