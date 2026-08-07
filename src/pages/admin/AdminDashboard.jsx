@@ -196,7 +196,8 @@ export default function AdminDashboard() {
       ...p,
       price: String(p.price ?? ''),
       priceEur: p.priceEur != null ? String(p.priceEur) : '',
-      images: Array.isArray(p.images) && p.images.length ? p.images : p.image ? [p.image] : [],
+      image: p.image || (Array.isArray(p.images) && p.images[0]) || '',
+      images: Array.isArray(p.images) && p.images.length ? p.images.slice(1) : [],
     })
     setError('')
   }
@@ -252,6 +253,25 @@ export default function AdminDashboard() {
   const removeImage = (index) =>
     setForm((f) => ({ ...f, images: f.images.filter((_, i) => i !== index) }))
 
+  const handleMainImage = async (file) => {
+    if (!file || !file.type.startsWith('image/')) {
+      setError('Please drop an image file.')
+      return
+    }
+    try {
+      const dataUrl = await processFile(file)
+      setForm((f) => ({ ...f, image: dataUrl }))
+      setError('')
+    } catch {
+      setError('Could not read that image.')
+    }
+  }
+
+  const onMainImageDrop = (ev) => {
+    ev.preventDefault()
+    handleMainImage(ev.dataTransfer?.files?.[0])
+  }
+
   const onImageDrop = (ev) => {
     ev.preventDefault()
     addImages(ev.dataTransfer?.files)
@@ -287,12 +307,13 @@ export default function AdminDashboard() {
     setError('')
     setMessage('')
     try {
+      const allImages = [form.image, ...form.images].filter(Boolean)
       const payload = {
         ...form,
         price: Number(form.price),
         priceEur: form.priceEur ? Number(form.priceEur) : null,
-        image: form.images[0] || '',
-        images: form.images,
+        image: form.image || allImages[0] || '',
+        images: allImages,
       }
       if (editing) {
         await updateProduct(editing, payload, token)
@@ -431,7 +452,37 @@ export default function AdminDashboard() {
                 <textarea rows="3" value={form.description} onChange={(e) => change('description', e.target.value)} />
               </div>
               <div className="field">
-                <label>Product pictures (drag &amp; drop multiple)</label>
+                <label>Main photo (drag &amp; drop)</label>
+                <div
+                  className="dropzone"
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={onMainImageDrop}
+                  onClick={() => document.getElementById('product-main-image-input')?.click()}
+                >
+                  {form.image ? (
+                    <img src={form.image} alt="Main photo preview" className="dropzone-preview" />
+                  ) : (
+                    <span className="dropzone-hint">Drop the main photo here or click to browse</span>
+                  )}
+                  <input
+                    id="product-main-image-input"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={(e) => {
+                      handleMainImage(e.target.files?.[0])
+                      e.target.value = ''
+                    }}
+                  />
+                </div>
+                {form.image && (
+                  <button type="button" className="text-link" onClick={() => change('image', '')}>
+                    Remove main photo
+                  </button>
+                )}
+              </div>
+              <div className="field">
+                <label>More pictures (drag &amp; drop multiple)</label>
                 <div
                   className="dropzone"
                   onDragOver={(e) => e.preventDefault()}
@@ -458,7 +509,7 @@ export default function AdminDashboard() {
                       ))}
                     </div>
                   ) : (
-                    <span className="dropzone-hint">Drop one or more images here or click to browse</span>
+                    <span className="dropzone-hint">Drop one or more extra pictures here or click to browse</span>
                   )}
                   <input
                     id="product-image-input"
@@ -472,7 +523,7 @@ export default function AdminDashboard() {
                     }}
                   />
                 </div>
-                <span className="admin-sub">First picture is used as the cover &middot; drop more to add</span>
+                <span className="admin-sub">Extra pictures shown in the product gallery</span>
               </div>
               {editing && (
                 <button type="button" className="text-link" onClick={startNew}>
