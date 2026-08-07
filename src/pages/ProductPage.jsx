@@ -105,10 +105,11 @@ export default function ProductPage() {
           </button>
 
           <ul className="product-perks">
-            <li>Ships from California, USA or Vilnius, Lithuania — whichever is closer to you</li>
-            <li>Prices shown in USD and EUR</li>
-            <li>Pay by Revolut, Cards, Google Pay, PayPal, Venmo and more</li>
-            <li>14-day returns on unused gear</li>
+            <li>✓ Worldwide Shipping — Ships from our locations in USA and Lithuania.</li>
+            <li>✓ Secure Payment Options — Pay safely with trusted payment methods.</li>
+            <li>✓ Premium Watersports Gear — Quality equipment from leading brands.</li>
+            <li>✓ 30-Day Returns — Easy returns on eligible unused gear within 30 days.</li>
+            <li>✓ Trusted Customer Service — Professional support before and after your purchase.</li>
           </ul>
         </div>
       </div>
