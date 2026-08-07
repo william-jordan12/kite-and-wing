@@ -77,9 +77,16 @@ function normalize(row) {
     }
   }
   return {
-    ...row,
+    id: row.id,
+    name: row.name,
+    brand: row.brand,
+    category: row.category,
+    type: row.type,
+    size: row.size,
     price: Number(row.price),
-    price_eur: row.price_eur == null ? null : Number(row.price_eur),
+    priceEur: row.price_eur == null ? null : Number(row.price_eur),
+    description: row.description,
+    image: row.image,
     images,
   }
 }
