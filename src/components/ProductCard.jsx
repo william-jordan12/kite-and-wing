@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { productImage } from '../utils/placeholder.js'
-import { formatUSD, formatEUR } from '../utils/pricing.js'
+import { formatUSD, formatNumberEUR, productEUR } from '../utils/pricing.js'
 
 export default function ProductCard({ product }) {
   return (
@@ -13,7 +13,7 @@ export default function ProductCard({ product }) {
         <h3>{product.name}</h3>
         <span className="product-type">{product.type}</span>
         <span className="product-price">{formatUSD(product.price)}</span>
-        <span className="product-price-eur">{formatEUR(product.price)}</span>
+        <span className="product-price-eur">{formatNumberEUR(productEUR(product, product.price))}</span>
       </div>
     </Link>
   )

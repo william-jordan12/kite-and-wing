@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { STORE_INFO } from '../data/store'
 import { paymentLogo } from '../utils/placeholder'
-import { formatUSD, formatEUR } from '../utils/pricing.js'
+import { formatUSD, formatNumberEUR, productEUR } from '../utils/pricing.js'
 import { useCart } from '../context/CartContext.jsx'
 import { saveOrder } from '../utils/order.js'
 
@@ -19,6 +19,7 @@ export default function CheckoutPage() {
   const navigate = useNavigate()
   const [form, setForm] = useState({ paymentMethod: '' })
   const [errors, setErrors] = useState({})
+  const totalEUR = detail.reduce((s, i) => s + productEUR(i.product, i.unitPrice * i.qty), 0)
 
   if (!detail.length) {
     return (
@@ -127,7 +128,7 @@ export default function CheckoutPage() {
           <div className="checkout-total">
             <span>Order total</span>
             <strong>{formatUSD(total)}</strong>
-            <span>{formatEUR(total)}</span>
+            <span>{formatNumberEUR(totalEUR)}</span>
           </div>
           <button type="submit" className="btn btn-primary btn-block">
             Proceed to payment

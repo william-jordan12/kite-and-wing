@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useProducts } from '../context/ProductsContext.jsx'
 import { productImage } from '../utils/placeholder.js'
 import { useCart } from '../context/CartContext.jsx'
-import { formatUSD, formatEUR, getVariants, variantPrice } from '../utils/pricing.js'
+import { formatUSD, formatNumberEUR, productEUR, getVariants, variantPrice } from '../utils/pricing.js'
 import ProductGrid from '../components/ProductGrid.jsx'
 
 export default function ProductPage() {
@@ -13,6 +13,7 @@ export default function ProductPage() {
   const { addItem } = useCart()
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
+  const [imgIdx, setImgIdx] = useState(0)
 
   if (!product) {
     return (
@@ -24,6 +25,8 @@ export default function ProductPage() {
       </div>
     )
   }
+
+  const images = Array.isArray(product.images) && product.images.length ? product.images : [productImage(product)]
 
   const variants = getVariants(product)
   const [size, setSize] = useState(
@@ -42,7 +45,23 @@ export default function ProductPage() {
     <div className="page">
       <div className="product-detail">
         <div className="product-detail-media">
-          <img src={productImage(product)} alt={product.name} />
+          <div className="product-detail-media__main">
+            <img src={images[Math.min(imgIdx, images.length - 1)]} alt={product.name} />
+          </div>
+          {images.length > 1 && (
+            <div className="product-thumbs">
+              {images.map((img, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`product-thumb ${i === imgIdx ? 'active' : ''}`}
+                  onClick={() => setImgIdx(i)}
+                >
+                  <img src={img} alt={`${product.name} ${i + 1}`} />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div className="product-detail-info">
           <span className="product-brand">{product.brand}</span>
@@ -51,7 +70,7 @@ export default function ProductPage() {
             {product.type} &middot; {size}
           </span>
           <p className="product-detail-price">{formatUSD(price)}</p>
-          <p className="product-detail-price-eur">{formatEUR(price)}</p>
+          <p className="product-detail-price-eur">{formatNumberEUR(productEUR(product, price))}</p>
           <p className="product-description">{product.description}</p>
 
           {variants.length > 1 && (

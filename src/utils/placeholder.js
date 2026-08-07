@@ -93,6 +93,7 @@ export function paymentLogo(method) {
 }
 
 export function productImage(product) {
+  if (Array.isArray(product.images) && product.images.length) return product.images[0]
   if (product.image) return product.image
 
   const real = REAL_IMAGES[product.name]

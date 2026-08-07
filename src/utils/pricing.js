@@ -3,12 +3,22 @@ export const EUR_RATE = 0.92
 export const formatUSD = (n) =>
   Number(n).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 })
 
-export const formatEUR = (n) =>
-  (Number(n) * EUR_RATE).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'EUR',
-    minimumFractionDigits: 2,
-  })
+export const formatNumberEUR = (n) =>
+  Number(n).toLocaleString('en-US', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 })
+
+export const formatEUR = (n) => formatNumberEUR(Number(n) * EUR_RATE)
+
+export const productEUR = (product, usd) => {
+  const eur = Number(product && product.priceEur)
+  if (eur > 0) {
+    const baseUsd = Number(product && product.price) || 0
+    if (baseUsd > 0) {
+      return Math.round((Number(usd) / baseUsd) * eur * 100) / 100
+    }
+    return eur
+  }
+  return Number(usd) * EUR_RATE
+}
 
 export const formatBoth = (n) => `${formatUSD(n)} / ${formatEUR(n)}`
 

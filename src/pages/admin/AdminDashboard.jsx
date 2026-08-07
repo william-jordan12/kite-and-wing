@@ -17,10 +17,23 @@ import {
 import { CATEGORIES, formatPrice } from '../../data/store.js'
 import { useProducts } from '../../context/ProductsContext.jsx'
 import { useSettings } from '../../context/SettingsContext.jsx'
-import { getVariants, defaultSize, isValidSize } from '../../utils/pricing.js'
+import { getVariants, defaultSize, isValidSize, productEUR } from '../../utils/pricing.js'
+import { formatNumberEUR } from '../../utils/pricing.js'
 import '../admin.css'
 
-const EMPTY = { id: '', name: '', brand: '', category: 'kiteboarding', type: '', size: '', price: '', description: '', image: '' }
+const EMPTY = {
+  id: '',
+  name: '',
+  brand: '',
+  category: 'kiteboarding',
+  type: '',
+  size: '',
+  price: '',
+  priceEur: '',
+  description: '',
+  image: '',
+  images: [],
+}
 
 export default function AdminDashboard() {
   const token = getToken()
@@ -179,7 +192,12 @@ export default function AdminDashboard() {
 
   const startEdit = (p) => {
     setEditing(p.id)
-    setForm({ ...p, price: String(p.price) })
+    setForm({
+      ...p,
+      price: String(p.price ?? ''),
+      priceEur: p.priceEur != null ? String(p.priceEur) : '',
+      images: Array.isArray(p.images) && p.images.length ? p.images : p.image ? [p.image] : [],
+    })
     setError('')
   }
 
@@ -195,37 +213,48 @@ export default function AdminDashboard() {
       return next
     })
 
-  const handleImageFile = (file) => {
-    if (!file || !file.type.startsWith('image/')) {
-      setError('Please drop an image file.')
+  const processFile = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const img = new Image()
+        img.onload = () => {
+          const max = 1200
+          const scale = Math.min(1, max / Math.max(img.width, img.height))
+          const canvas = document.createElement('canvas')
+          canvas.width = Math.round(img.width * scale)
+          canvas.height = Math.round(img.height * scale)
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
+          resolve(canvas.toDataURL('image/jpeg', 0.85))
+        }
+        img.onerror = () => reject(new Error('read'))
+        img.src = reader.result
+      }
+      reader.onerror = () => reject(new Error('file'))
+      reader.readAsDataURL(file)
+    })
+
+  const addImages = async (files) => {
+    const list = Array.from(files || []).filter((f) => f.type.startsWith('image/'))
+    if (!list.length) {
+      setError('Please drop image files.')
       return
     }
-    const reader = new FileReader()
-    reader.onload = () => {
-      const img = new Image()
-      img.onload = () => {
-        const max = 1200
-        const scale = Math.min(1, max / Math.max(img.width, img.height))
-        const canvas = document.createElement('canvas')
-        canvas.width = Math.round(img.width * scale)
-        canvas.height = Math.round(img.height * scale)
-        const ctx = canvas.getContext('2d')
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.85)
-        change('image', dataUrl)
-        setError('')
-      }
-      img.onerror = () => setError('Could not read that image.')
-      img.src = reader.result
+    try {
+      const dataUrls = await Promise.all(list.map(processFile))
+      setForm((f) => ({ ...f, images: [...f.images, ...dataUrls] }))
+      setError('')
+    } catch {
+      setError('Could not read one of the images.')
     }
-    reader.onerror = () => setError('Could not read that file.')
-    reader.readAsDataURL(file)
   }
+
+  const removeImage = (index) =>
+    setForm((f) => ({ ...f, images: f.images.filter((_, i) => i !== index) }))
 
   const onImageDrop = (ev) => {
     ev.preventDefault()
-    const file = ev.dataTransfer?.files?.[0]
-    handleImageFile(file)
+    addImages(ev.dataTransfer?.files)
   }
 
   const changeSetting = (field, value) => setSettingsForm((f) => ({ ...f, [field]: value }))
@@ -258,7 +287,13 @@ export default function AdminDashboard() {
     setError('')
     setMessage('')
     try {
-      const payload = { ...form, price: Number(form.price) }
+      const payload = {
+        ...form,
+        price: Number(form.price),
+        priceEur: form.priceEur ? Number(form.priceEur) : null,
+        image: form.images[0] || '',
+        images: form.images,
+      }
       if (editing) {
         await updateProduct(editing, payload, token)
       } else {
@@ -381,40 +416,63 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               )}
-              <div className="field">
-                <label>Price (USD)</label>
-                <input type="number" min="0" step="0.01" value={form.price} onChange={(e) => change('price', e.target.value)} required />
+              <div className="admin-row">
+                <div className="field">
+                  <label>Price (USD)</label>
+                  <input type="number" min="0" step="0.01" value={form.price} onChange={(e) => change('price', e.target.value)} required />
+                </div>
+                <div className="field">
+                  <label>Price (EUR)</label>
+                  <input type="number" min="0" step="0.01" value={form.priceEur} onChange={(e) => change('priceEur', e.target.value)} placeholder="optional, defaults to USD rate" />
+                </div>
               </div>
               <div className="field">
                 <label>Description</label>
                 <textarea rows="3" value={form.description} onChange={(e) => change('description', e.target.value)} />
               </div>
               <div className="field">
-                <label>Product image (drag &amp; drop)</label>
+                <label>Product pictures (drag &amp; drop multiple)</label>
                 <div
                   className="dropzone"
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={onImageDrop}
                   onClick={() => document.getElementById('product-image-input')?.click()}
                 >
-                  {form.image ? (
-                    <img src={form.image} alt="Preview" className="dropzone-preview" />
+                  {form.images.length ? (
+                    <div className="thumbnails">
+                      {form.images.map((img, i) => (
+                        <div className="thumb" key={i}>
+                          <img src={img} alt={`Preview ${i + 1}`} />
+                          <button
+                            type="button"
+                            className="thumb-remove"
+                            aria-label="Remove image"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              removeImage(i)
+                            }}
+                          >
+                            &times;
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   ) : (
-                    <span className="dropzone-hint">Drop an image here or click to browse</span>
+                    <span className="dropzone-hint">Drop one or more images here or click to browse</span>
                   )}
                   <input
                     id="product-image-input"
                     type="file"
                     accept="image/*"
+                    multiple
                     style={{ display: 'none' }}
-                    onChange={(e) => handleImageFile(e.target.files?.[0])}
+                    onChange={(e) => {
+                      addImages(e.target.files)
+                      e.target.value = ''
+                    }}
                   />
                 </div>
-                {form.image && (
-                  <button type="button" className="text-link" onClick={() => change('image', '')}>
-                    Remove image
-                  </button>
-                )}
+                <span className="admin-sub">First picture is used as the cover &middot; drop more to add</span>
               </div>
               {editing && (
                 <button type="button" className="text-link" onClick={startNew}>
@@ -445,8 +503,8 @@ export default function AdminDashboard() {
                 {products.map((p) => (
                   <tr key={p.id}>
                     <td className="admin-thumb">
-                      {p.image ? (
-                        <img src={p.image} alt="" />
+                      {(p.images && p.images[0]) || p.image ? (
+                        <img src={(p.images && p.images[0]) || p.image} alt="" />
                       ) : (
                         <span className="admin-thumb-placeholder">—</span>
                       )}
@@ -457,7 +515,10 @@ export default function AdminDashboard() {
                     </td>
                     <td>{p.brand}</td>
                     <td>{CATEGORIES.find((c) => c.id === p.category)?.name || p.category}</td>
-                    <td>{formatPrice(p.price)}</td>
+                    <td>
+                      {formatPrice(p.price)}
+                      <span className="admin-sub">{formatNumberEUR(productEUR(p, p.price))}</span>
+                    </td>
                     <td className="admin-actions">
                       <button className="btn btn-secondary btn-sm" onClick={() => startEdit(p)}>
                         Edit

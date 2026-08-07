@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
 import { productImage } from '../utils/placeholder.js'
-import { formatUSD, formatEUR } from '../utils/pricing.js'
+import { formatUSD, formatNumberEUR, productEUR } from '../utils/pricing.js'
 import { useCart } from '../context/CartContext.jsx'
 
 export default function CartPage() {
   const { detail, total, updateQty, removeItem } = useCart()
+  const totalEUR = detail.reduce((s, i) => s + productEUR(i.product, i.unitPrice * i.qty), 0)
 
   if (!detail.length) {
     return (
@@ -49,7 +50,7 @@ export default function CartPage() {
               </div>
               <div className="cart-item-price">
                 {formatUSD(unitPrice * qty)}
-                <span className="cart-item-price-eur">{formatEUR(unitPrice * qty)}</span>
+                <span className="cart-item-price-eur">{formatNumberEUR(productEUR(product, unitPrice * qty))}</span>
               </div>
               <button className="cart-remove" onClick={() => removeItem(product.id, size)}>
                 &times;
@@ -66,7 +67,7 @@ export default function CartPage() {
           </div>
           <div className="summary-row">
             <span>Subtotal (EUR)</span>
-            <span>{formatEUR(total)}</span>
+            <span>{formatNumberEUR(totalEUR)}</span>
           </div>
           <div className="summary-row">
             <span>Shipping</span>
@@ -78,7 +79,7 @@ export default function CartPage() {
           </div>
           <div className="summary-row">
             <span>Total (EUR)</span>
-            <span>{formatEUR(total)}</span>
+            <span>{formatNumberEUR(totalEUR)}</span>
           </div>
           <p className="cart-shipping-note">
             We ship from California, USA and Vilnius, Lithuania — from the warehouse closest to you.

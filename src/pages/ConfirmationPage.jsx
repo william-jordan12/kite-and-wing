@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { getOrder, clearOrder } from '../utils/order.js'
 import { buildOrderMessage, whatsappLink, mailtoLink } from '../utils/message.js'
-import { formatUSD, formatEUR } from '../utils/pricing.js'
+import { formatUSD, formatNumberEUR, productEUR } from '../utils/pricing.js'
 import { saveOrder } from '../api.js'
 import { useCart } from '../context/CartContext.jsx'
 import { useSettings } from '../context/SettingsContext.jsx'
@@ -40,6 +40,10 @@ export default function ConfirmationPage() {
   const channel = location.state?.channel || 'email'
   const message = buildOrderMessage(order, settings.email)
   const total = order.total || 0
+  const totalEUR = (order.items || []).reduce(
+    (s, i) => s + productEUR(i.product, (i.unitPrice || i.product?.price || 0) * i.qty),
+    0
+  )
 
   const handleCopy = async () => {
     try {
@@ -76,7 +80,7 @@ export default function ConfirmationPage() {
           <span className="check-badge">&#10003;</span>
           <h1>Almost done!</h1>
           <p>
-            Your order of <strong>{formatUSD(total)}</strong> ({formatEUR(total)}) is ready. No
+            Your order of <strong>{formatUSD(total)}</strong> ({formatNumberEUR(totalEUR)}) is ready. No
             automated email is sent — copy the request below and send it to us via{' '}
             {channel === 'whatsapp' ? 'WhatsApp' : 'email'} to receive payment details.
           </p>
