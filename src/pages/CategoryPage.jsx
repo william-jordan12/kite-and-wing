@@ -7,7 +7,7 @@ import ProductGrid from '../components/ProductGrid.jsx'
 export default function CategoryPage() {
   const { categoryId } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { byBrand } = useProducts()
+  const { byBrand, products } = useProducts()
   const category = getCategory(categoryId)
 
   if (!category) {
@@ -20,6 +20,19 @@ export default function CategoryPage() {
       </div>
     )
   }
+
+  const dataBrands = products
+    .filter((p) => p.category === category.id)
+    .map((p) => String(p.brand || '').trim())
+    .filter(Boolean)
+
+  const seen = new Set()
+  const brandList = [...category.brands, ...dataBrands].filter((b) => {
+    const key = b.toLowerCase()
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 
   const activeBrand = searchParams.get('brand')
   const shown = activeBrand ? byBrand(category.id, activeBrand) : []
@@ -126,7 +139,7 @@ export default function CategoryPage() {
       <div id="products" className="category-shop">
         <div className="brand-filter">
           <span className="brand-filter__label">Shop by brand</span>
-          {category.brands.map((brand) => (
+          {brandList.map((brand) => (
             <button
               key={brand}
               className={`chip ${activeBrand === brand ? 'chip-active' : ''}`}
@@ -148,7 +161,7 @@ export default function CategoryPage() {
           <div className="brand-gate">
             <h3>Choose a brand to see its products</h3>
             <p>
-              Select one of the {category.brands.length} brands above to browse the {category.name}{' '}
+              Select one of the {brandList.length} brands above to browse the {category.name}{' '}
               range we carry.
             </p>
           </div>
