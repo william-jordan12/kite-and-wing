@@ -1140,6 +1140,11 @@ h6 {
   object-fit: contain;
 }
 
+.product-image-loading {
+  color: var(--ink-mute);
+  font-size: var(--text-base);
+}
+
 .product-thumbs {
   display: flex;
   flex-wrap: wrap;

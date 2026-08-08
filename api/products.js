@@ -4,8 +4,32 @@ import { requireAuth, readBody } from './_auth.js'
 export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
+      const id = String(req.query.id || '').trim()
+      const full = String(req.query.full || '') === '1'
+
+      if (id) {
+        const result = await pool.query(
+          `SELECT id, name, brand, category, type, size, price, price_eur, description, image, images FROM products WHERE id = $1`,
+          [id]
+        )
+        if (!result.rows.length) {
+          res.status(404).json({ error: 'Product not found' })
+          return
+        }
+        res.json(normalize(result.rows[0]))
+        return
+      }
+
+      if (full) {
+        const result = await pool.query(
+          `SELECT id, name, brand, category, type, size, price, price_eur, description, image, images FROM products ORDER BY category, brand, name`
+        )
+        res.json(result.rows.map(normalize))
+        return
+      }
+
       const result = await pool.query(
-        `SELECT id, name, brand, category, type, size, price, price_eur, description, image, images FROM products ORDER BY category, brand, name`
+        `SELECT id, name, brand, category, type, size, price, price_eur FROM products ORDER BY category, brand, name`
       )
       res.json(result.rows.map(normalize))
       return

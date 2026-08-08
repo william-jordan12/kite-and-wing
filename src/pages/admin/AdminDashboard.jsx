@@ -4,6 +4,7 @@ import {
   getToken,
   clearToken,
   getProducts,
+  getProductFull,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -197,16 +198,31 @@ export default function AdminDashboard() {
     setError('')
   }
 
-  const startEdit = (p) => {
+  const startEdit = async (p) => {
     setEditing(p.id)
     setForm({
       ...p,
       price: String(p.price ?? ''),
       priceEur: p.priceEur != null ? String(p.priceEur) : '',
-      image: p.image || (Array.isArray(p.images) && p.images[0]) || '',
-      images: Array.isArray(p.images) && p.images.length ? p.images.slice(1) : [],
+      image: p.image || '',
+      images: Array.isArray(p.images) && p.images.length ? p.images : [],
     })
     setError('')
+    try {
+      const full = await getProductFull(p.id)
+      setForm((f) => ({
+        ...f,
+        image: full.image || f.image,
+        images:
+          Array.isArray(full.images) && full.images.length
+            ? full.images
+            : full.image
+              ? [full.image]
+              : f.images,
+      }))
+    } catch {
+      // keep the light form data
+    }
   }
 
   const change = (field, value) =>

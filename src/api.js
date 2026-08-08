@@ -17,6 +17,10 @@ async function request(path, options = {}) {
 
 export const getProducts = () => request('/products')
 
+export const getProductsFull = () => request('/products?full=1')
+
+export const getProductFull = (id) => request(`/products?id=${encodeURIComponent(id)}`)
+
 export const adminLogin = (username, password) =>
   request('/login', { method: 'POST', body: JSON.stringify({ username, password }) })
 

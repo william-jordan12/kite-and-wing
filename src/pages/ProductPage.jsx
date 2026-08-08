@@ -1,19 +1,49 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useProducts } from '../context/ProductsContext.jsx'
 import { productImage } from '../utils/placeholder.js'
 import { useCart } from '../context/CartContext.jsx'
+import { getProductFull } from '../api.js'
 import { formatUSD, formatNumberEUR, productEUR, getVariants, variantPrice } from '../utils/pricing.js'
 import ProductGrid from '../components/ProductGrid.jsx'
 
 export default function ProductPage() {
   const { productId } = useParams()
   const { getProduct, byCategory } = useProducts()
-  const product = getProduct(productId)
+  const light = getProduct(productId)
   const { addItem } = useCart()
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
   const [imgIdx, setImgIdx] = useState(0)
+  const [full, setFull] = useState(null)
+  const [loaded, setLoaded] = useState(false)
+
+  const lightVariants = light ? getVariants(light) : []
+  const [size, setSize] = useState(
+    () =>
+      lightVariants.find((v) => v.size === (light && light.size))?.size || lightVariants[0]?.size || ''
+  )
+
+  useEffect(() => {
+    setFull(null)
+    setLoaded(false)
+    setImgIdx(0)
+    let active = true
+    getProductFull(productId)
+      .then((data) => {
+        if (!active) return
+        setFull(data)
+        setLoaded(true)
+      })
+      .catch(() => {
+        if (active) setLoaded(true)
+      })
+    return () => {
+      active = false
+    }
+  }, [productId])
+
+  const product = full || light
 
   if (!product) {
     return (
@@ -26,14 +56,10 @@ export default function ProductPage() {
     )
   }
 
-  const images = Array.isArray(product.images) && product.images.length ? product.images : [productImage(product)]
-
   const variants = getVariants(product)
-  const [size, setSize] = useState(
-    () => variants.find((v) => v.size === product.size)?.size || variants[0].size
-  )
   const price = variantPrice(product, size)
   const related = byCategory(product.category).filter((p) => p.id !== product.id).slice(0, 4)
+  const images = Array.isArray(product.images) && product.images.length ? product.images : [productImage(product)]
 
   const handleAdd = () => {
     addItem(product.id, qty, size)
@@ -46,7 +72,11 @@ export default function ProductPage() {
       <div className="product-detail">
         <div className="product-detail-media">
           <div className="product-detail-media__main">
-            <img src={images[Math.min(imgIdx, images.length - 1)]} alt={product.name} />
+            {!full && !loaded ? (
+              <span className="product-image-loading">Loading photo…</span>
+            ) : (
+              <img src={images[Math.min(imgIdx, images.length - 1)]} alt={product.name} />
+            )}
           </div>
           {images.length > 1 && (
             <div className="product-thumbs">
