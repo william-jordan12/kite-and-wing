@@ -234,6 +234,9 @@ export default function AdminDashboard() {
           next.size = dflt
         }
       }
+      if (field === 'category') {
+        next.brand = ''
+      }
       return next
     })
 
@@ -437,12 +440,23 @@ export default function AdminDashboard() {
               </div>
               <div className="field">
                 <label>Brand</label>
-                <input value={form.brand} onChange={(e) => change('brand', e.target.value)} list="brand-options" required />
-                <datalist id="brand-options">
-                  {CATEGORIES.flatMap((c) => c.brands).map((b) => (
-                    <option key={b} value={b} />
+                <select
+                  value={form.brand}
+                  onChange={(e) => change('brand', e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select a brand
+                  </option>
+                  {form.brand && !brands.includes(form.brand) && (
+                    <option value={form.brand}>{form.brand}</option>
+                  )}
+                  {brands.map((b) => (
+                    <option key={b} value={b}>
+                      {b}
+                    </option>
                   ))}
-                </datalist>
+                </select>
               </div>
               <div className="admin-row">
                 <div className="field">
