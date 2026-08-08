@@ -71,7 +71,6 @@ export const STORE_INFO = {
     'Cards',
     'Google Pay',
     'Cash App',
-    'PayPal',
     'Venmo',
     'Zelle',
     'Bitcoin',

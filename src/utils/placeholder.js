@@ -77,7 +77,6 @@ const PAYMENT_LOGOS = {
   Cards: '/images/payments/visa.svg',
   'Google Pay': '/images/payments/google-pay.svg',
   'Cash App': '/images/payments/cash-app.svg',
-  PayPal: '/images/payments/paypal.svg',
   Venmo: '/images/payments/venmo.svg',
   Zelle: '/images/payments/zelle.svg',
   Bitcoin: '/images/payments/bitcoin.svg',

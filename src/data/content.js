@@ -56,7 +56,7 @@ export const FAQS = [
   },
   {
     q: 'How do I pay for my order?',
-    a: 'After you complete the checkout form you choose a payment method (Revolut, Cards, Google Pay, Cash App, PayPal, Venmo, Zelle, Bitcoin, Apple Pay, Chime, Bank Transfer, Cryptocurrency or Wire Transfer) and then decide to finalize the order via WhatsApp or email. We send you the payment details to complete your order.',
+    a: 'After you complete the checkout form you choose a payment method (Revolut, Cards, Google Pay, Cash App, Venmo, Zelle, Bitcoin, Apple Pay, Chime, Bank Transfer, Cryptocurrency or Wire Transfer) and then decide to finalize the order via WhatsApp or email. We send you the payment details to complete your order.',
   },
   {
     q: 'Is my payment information stored on the website?',
