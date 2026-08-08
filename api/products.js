@@ -29,9 +29,11 @@ export default async function handler(req, res) {
       }
 
       const result = await pool.query(
-        `SELECT id, name, brand, category, type, size, price, price_eur FROM products ORDER BY category, brand, name`
+        `SELECT id, name, brand, category, type, size, price, price_eur,
+                CASE WHEN image IS NOT NULL AND image <> '' THEN true ELSE false END AS has_image
+         FROM products ORDER BY category, brand, name`
       )
-      res.json(result.rows.map(normalize))
+      res.json(result.rows.map((row) => ({ ...normalize(row), image: row.has_image ? coverUrl(row.id) : '' })))
       return
     }
 
@@ -57,6 +59,8 @@ export default async function handler(req, res) {
 }
 
 const clean = (s) => String(s == null ? '' : s).trim()
+
+const coverUrl = (id) => `/api/product-image?id=${encodeURIComponent(id)}&n=0`
 
 const authedPost = requireAuth(async (req, res) => {
   const body = await readBody(req)
