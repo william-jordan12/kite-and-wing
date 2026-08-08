@@ -21,6 +21,13 @@ import { getVariants, defaultSize, isValidSize, productEUR } from '../../utils/p
 import { formatNumberEUR } from '../../utils/pricing.js'
 import '../admin.css'
 
+const slugify = (s) =>
+  String(s || '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
 const EMPTY = {
   id: '',
   name: '',
@@ -310,7 +317,7 @@ export default function AdminDashboard() {
       const allImages = [form.image, ...form.images].filter(Boolean)
       const payload = {
         ...form,
-        id: (form.id || '').trim(),
+        id: editing ? (form.id || '').trim() : slugify(form.id) || slugify(form.name),
         name: (form.name || '').trim(),
         brand: (form.brand || '').trim(),
         type: (form.type || '').trim(),
@@ -330,6 +337,17 @@ export default function AdminDashboard() {
       setMessage(editing ? 'Product updated.' : 'Product created.')
     } catch (e) {
       setError(e.message)
+    }
+  }
+
+  const copyProductLink = async (p) => {
+    const url = `${window.location.origin}/product/${encodeURIComponent(p.id)}`
+    try {
+      await navigator.clipboard.writeText(url)
+      setMessage('Product link copied.')
+      setTimeout(() => setMessage(''), 3000)
+    } catch {
+      setError('Could not copy the link.')
     }
   }
 
@@ -393,7 +411,7 @@ export default function AdminDashboard() {
             <form onSubmit={save}>
               {!editing && (
                 <div className="field">
-                  <label>ID (slug, e.g. rebel-2026)</label>
+                  <label>ID (auto-converted to a clean link slug, e.g. rebel-2026)</label>
                   <input value={form.id} onChange={(e) => change('id', e.target.value)} required />
                 </div>
               )}
@@ -576,6 +594,9 @@ export default function AdminDashboard() {
                       <span className="admin-sub">{formatNumberEUR(productEUR(p, p.price))}</span>
                     </td>
                     <td className="admin-actions">
+                      <button className="btn btn-secondary btn-sm" onClick={() => copyProductLink(p)}>
+                        Copy link
+                      </button>
                       <button className="btn btn-secondary btn-sm" onClick={() => startEdit(p)}>
                         Edit
                       </button>

@@ -32,21 +32,21 @@ export default async function handler(req, res) {
   }
 }
 
+const clean = (s) => String(s == null ? '' : s).trim()
+
 const authedPost = requireAuth(async (req, res) => {
   const body = await readBody(req)
-  const {
-    id,
-    name,
-    brand,
-    category,
-    type = '',
-    size = '',
-    price,
-    price_eur = null,
-    description = '',
-    image = '',
-    images = null,
-  } = body
+  const id = clean(body.id)
+  const name = clean(body.name)
+  const brand = clean(body.brand)
+  const category = clean(body.category)
+  const type = clean(body.type)
+  const size = clean(body.size)
+  const price = body.price
+  const price_eur = body.price_eur == null || body.price_eur === '' ? null : body.price_eur
+  const description = clean(body.description)
+  const image = body.image || ''
+  const images = body.images || null
   if (!id || !name || !brand || !category || !Number.isFinite(Number(price))) {
     res.status(400).json({ error: 'id, name, brand, category and price are required' })
     return
@@ -98,18 +98,16 @@ const authedPut = requireAuth(async (req, res) => {
     return
   }
   const body = await readBody(req)
-  const {
-    name,
-    brand,
-    category,
-    type = '',
-    size = '',
-    price,
-    price_eur = null,
-    description = '',
-    image = '',
-    images = null,
-  } = body
+  const name = clean(body.name)
+  const brand = clean(body.brand)
+  const category = clean(body.category)
+  const type = clean(body.type)
+  const size = clean(body.size)
+  const price = body.price
+  const price_eur = body.price_eur == null || body.price_eur === '' ? null : body.price_eur
+  const description = clean(body.description)
+  const image = body.image || ''
+  const images = body.images || null
   if (!name || !brand || !category || !Number.isFinite(Number(price))) {
     res.status(400).json({ error: 'name, brand, category and price are required' })
     return

@@ -58,7 +58,11 @@ export function ProductsProvider({ children }) {
       getProduct: (id) => products.find((p) => p.id === id),
       byCategory: (categoryId) => products.filter((p) => p.category === categoryId),
       byBrand: (categoryId, brand) =>
-        products.filter((p) => p.category === categoryId && p.brand === brand),
+        products.filter(
+          (p) =>
+            p.category === categoryId &&
+            String(p.brand).trim().toLowerCase() === String(brand).trim().toLowerCase()
+        ),
     }),
     [products, loading, source]
   )
