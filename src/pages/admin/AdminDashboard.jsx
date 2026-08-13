@@ -18,7 +18,7 @@ import {
 import { CATEGORIES, formatPrice } from '../../data/store.js'
 import { useProducts } from '../../context/ProductsContext.jsx'
 import { useSettings } from '../../context/SettingsContext.jsx'
-import { getVariants, defaultSize, isValidSize, productEUR } from '../../utils/pricing.js'
+import { productEUR } from '../../utils/pricing.js'
 import { formatNumberEUR } from '../../utils/pricing.js'
 import '../admin.css'
 
@@ -28,6 +28,12 @@ const slugify = (s) =>
     .trim()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
+
+const toVariantForm = (v) => ({
+  size: String(v && v.size || '').trim(),
+  price: v && v.price != null ? String(v.price) : '',
+  priceEur: v && v.priceEur != null ? String(v.priceEur) : '',
+})
 
 const EMPTY = {
   id: '',
@@ -41,6 +47,7 @@ const EMPTY = {
   description: '',
   image: '',
   images: [],
+  variants: [],
 }
 
 export default function AdminDashboard() {
@@ -206,6 +213,7 @@ export default function AdminDashboard() {
       priceEur: p.priceEur != null ? String(p.priceEur) : '',
       image: p.image || '',
       images: Array.isArray(p.images) && p.images.length ? p.images : [],
+      variants: Array.isArray(p.variants) && p.variants.length ? p.variants.map(toVariantForm) : [],
     })
     setError('')
     try {
@@ -219,6 +227,10 @@ export default function AdminDashboard() {
             : full.image
               ? [full.image]
               : f.images,
+        variants:
+          Array.isArray(full.variants) && full.variants.length
+            ? full.variants.map(toVariantForm)
+            : f.variants,
       }))
     } catch {
       // keep the light form data
@@ -228,17 +240,23 @@ export default function AdminDashboard() {
   const change = (field, value) =>
     setForm((f) => {
       const next = { ...f, [field]: value }
-      if (field === 'type') {
-        const dflt = defaultSize(value)
-        if (dflt && !isValidSize(value, next.size)) {
-          next.size = dflt
-        }
-      }
       if (field === 'category') {
         next.brand = ''
       }
       return next
     })
+
+  const setVariantField = (index, field, value) =>
+    setForm((f) => ({
+      ...f,
+      variants: f.variants.map((v, i) => (i === index ? { ...v, [field]: value } : v)),
+    }))
+
+  const addVariant = () =>
+    setForm((f) => ({ ...f, variants: [...f.variants, { size: '', price: '', priceEur: '' }] }))
+
+  const removeVariant = (index) =>
+    setForm((f) => ({ ...f, variants: f.variants.filter((_, i) => i !== index) }))
 
   const processFile = (file) =>
     new Promise((resolve, reject) => {
@@ -345,6 +363,13 @@ export default function AdminDashboard() {
         priceEur: form.priceEur ? Number(form.priceEur) : null,
         image: form.image || allImages[0] || '',
         images: allImages,
+        variants: form.variants
+          .map((v) => ({
+            size: String(v.size || '').trim(),
+            price: v.price === '' || v.price == null ? null : Number(v.price),
+            priceEur: v.priceEur === '' || v.priceEur == null ? null : Number(v.priceEur),
+          }))
+          .filter((v) => v.size),
       }
       if (editing) {
         await updateProduct(editing, payload, token)
@@ -382,10 +407,6 @@ export default function AdminDashboard() {
   }
 
   const brands = CATEGORIES.find((c) => c.id === form.category)?.brands || []
-  const preview =
-    form.type || form.size
-      ? getVariants({ type: form.type, size: form.size, price: Number(form.price) || 0 })
-      : []
 
   return (
     <div className="admin-page">
@@ -474,29 +495,61 @@ export default function AdminDashboard() {
                   <input value={form.type} onChange={(e) => change('type', e.target.value)} />
                 </div>
                 <div className="field">
-                  <label>Base size (auto-fills from type)</label>
+                  <label>Default size (used if no sizes added below)</label>
                   <input value={form.size} onChange={(e) => change('size', e.target.value)} />
                 </div>
               </div>
-              {preview.length > 0 && (
-                <div className="sizes-preview">
-                  <span className="admin-sub">Auto-generated sizes:</span>
-                  <div className="sizes-preview__chips">
-                    {preview.map((v) => (
-                      <span key={v.size} className="sizes-preview__chip">
-                        {v.size} &middot; {formatPrice(v.price)}
-                      </span>
-                    ))}
-                  </div>
+              <div className="field">
+                <span className="admin-sub">Sizes &amp; prices (manual — type each size and its own price)</span>
+                <div className="variant-editor">
+                  {form.variants.map((v, i) => (
+                    <div className="variant-editor__row" key={i}>
+                      <input
+                        className="variant-editor__size"
+                        placeholder="Size e.g. 10m"
+                        value={v.size}
+                        onChange={(e) => setVariantField(i, 'size', e.target.value)}
+                      />
+                      <input
+                        className="variant-editor__price"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="USD price"
+                        value={v.price}
+                        onChange={(e) => setVariantField(i, 'price', e.target.value)}
+                      />
+                      <input
+                        className="variant-editor__price"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="EUR price (optional)"
+                        value={v.priceEur}
+                        onChange={(e) => setVariantField(i, 'priceEur', e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm"
+                        aria-label="Remove size"
+                        onClick={() => removeVariant(i)}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              )}
+                <button type="button" className="btn btn-secondary btn-sm" onClick={addVariant}>
+                  + Add size
+                </button>
+              </div>
               <div className="admin-row">
                 <div className="field">
-                  <label>Price (USD)</label>
+                  <label>Base price (USD)</label>
                   <input type="number" min="0" step="0.01" value={form.price} onChange={(e) => change('price', e.target.value)} required />
                 </div>
                 <div className="field">
-                  <label>Price (EUR)</label>
+                  <label>Base price (EUR)</label>
                   <input type="number" min="0" step="0.01" value={form.priceEur} onChange={(e) => change('priceEur', e.target.value)} placeholder="optional, defaults to USD rate" />
                 </div>
               </div>

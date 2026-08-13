@@ -7,13 +7,13 @@ export function buildOrderMessage(order, email) {
       const size = i.size || i.product?.size || 'One Size'
       const price = i.unitPrice || i.product?.price || i.price || 0
       const line = price * i.qty
-      return `- ${i.qty} x ${name} (${size}) — ${formatUSD(line)} / ${formatNumberEUR(productEUR(i.product, line))}`
+      return `- ${i.qty} x ${name} (${size}) — ${formatUSD(line)} / ${formatNumberEUR(productEUR(i.product, line, size))}`
     })
     .join('\n')
 
   const total = order.total || 0
   const totalEUR = (order.items || []).reduce(
-    (s, i) => s + productEUR(i.product, (i.unitPrice || i.product?.price || 0) * i.qty),
+    (s, i) => s + productEUR(i.product, (i.unitPrice || i.product?.price || 0) * i.qty, i.size),
     0
   )
 

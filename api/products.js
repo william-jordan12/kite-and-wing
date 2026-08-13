@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
       if (id) {
         const result = await pool.query(
-          `SELECT id, name, brand, category, type, size, price, price_eur, description, image, images FROM products WHERE id = $1`,
+          `SELECT id, name, brand, category, type, size, price, price_eur, description, image, images, variants FROM products WHERE id = $1`,
           [id]
         )
         if (!result.rows.length) {
@@ -22,14 +22,14 @@ export default async function handler(req, res) {
 
       if (full) {
         const result = await pool.query(
-          `SELECT id, name, brand, category, type, size, price, price_eur, description, image, images FROM products ORDER BY category, brand, name`
+          `SELECT id, name, brand, category, type, size, price, price_eur, description, image, images, variants FROM products ORDER BY category, brand, name`
         )
         res.json(result.rows.map(normalize))
         return
       }
 
       const result = await pool.query(
-        `SELECT id, name, brand, category, type, size, price, price_eur,
+        `SELECT id, name, brand, category, type, size, price, price_eur, variants,
                 CASE WHEN image IS NOT NULL AND image <> '' THEN true ELSE false END AS has_image
          FROM products ORDER BY category, brand, name`
       )
@@ -80,16 +80,17 @@ const authedPost = requireAuth(async (req, res) => {
     return
   }
   const imagesJson = Array.isArray(images) && images.length ? JSON.stringify(images) : null
+  const variantsJson = Array.isArray(body.variants) && body.variants.length ? JSON.stringify(body.variants) : null
   const result = await pool.query(
-    `INSERT INTO products (id, name, brand, category, type, size, price, price_eur, description, image, images)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    `INSERT INTO products (id, name, brand, category, type, size, price, price_eur, description, image, images, variants)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
      ON CONFLICT (id) DO UPDATE SET
        name = EXCLUDED.name, brand = EXCLUDED.brand, category = EXCLUDED.category,
        type = EXCLUDED.type, size = EXCLUDED.size, price = EXCLUDED.price,
        price_eur = EXCLUDED.price_eur, description = EXCLUDED.description,
-       image = EXCLUDED.image, images = EXCLUDED.images
-     RETURNING id, name, brand, category, type, size, price, price_eur, description, image, images`,
-    [id, name, brand, category, type, size, price, price_eur, description, image, imagesJson]
+       image = EXCLUDED.image, images = EXCLUDED.images, variants = EXCLUDED.variants
+     RETURNING id, name, brand, category, type, size, price, price_eur, description, image, images, variants`,
+    [id, name, brand, category, type, size, price, price_eur, description, image, imagesJson, variantsJson]
   )
   res.status(201).json(normalize(result.rows[0]))
 })
@@ -104,6 +105,15 @@ function normalize(row) {
       images = [row.images]
     }
   }
+  let variants = null
+  if (row.variants) {
+    try {
+      const parsed = JSON.parse(row.variants)
+      if (Array.isArray(parsed)) variants = parsed
+    } catch {
+      variants = null
+    }
+  }
   return {
     id: row.id,
     name: row.name,
@@ -116,6 +126,7 @@ function normalize(row) {
     description: row.description,
     image: row.image,
     images,
+    variants,
   }
 }
 
@@ -141,13 +152,14 @@ const authedPut = requireAuth(async (req, res) => {
     return
   }
   const imagesJson = Array.isArray(images) && images.length ? JSON.stringify(images) : null
+  const variantsJson = Array.isArray(body.variants) && body.variants.length ? JSON.stringify(body.variants) : null
   const result = await pool.query(
     `UPDATE products
      SET name = $2, brand = $3, category = $4, type = $5, size = $6, price = $7, price_eur = $8,
-         description = $9, image = $10, images = $11
+         description = $9, image = $10, images = $11, variants = $12
      WHERE id = $1
-     RETURNING id, name, brand, category, type, size, price, price_eur, description, image, images`,
-    [id, name, brand, category, type, size, price, price_eur, description, image, imagesJson]
+     RETURNING id, name, brand, category, type, size, price, price_eur, description, image, images, variants`,
+    [id, name, brand, category, type, size, price, price_eur, description, image, imagesJson, variantsJson]
   )
   if (!result.rows.length) {
     res.status(404).json({ error: 'Product not found' })

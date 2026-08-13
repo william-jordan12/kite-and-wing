@@ -19,7 +19,7 @@ export default function CheckoutPage() {
   const navigate = useNavigate()
   const [form, setForm] = useState({ paymentMethod: '' })
   const [errors, setErrors] = useState({})
-  const totalEUR = detail.reduce((s, i) => s + productEUR(i.product, i.unitPrice * i.qty), 0)
+  const totalEUR = detail.reduce((s, i) => s + productEUR(i.product, i.unitPrice * i.qty, i.size), 0)
 
   if (!detail.length) {
     return (

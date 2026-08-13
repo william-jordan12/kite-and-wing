@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext.jsx'
 
 export default function CartPage() {
   const { detail, total, updateQty, removeItem } = useCart()
-  const totalEUR = detail.reduce((s, i) => s + productEUR(i.product, i.unitPrice * i.qty), 0)
+  const totalEUR = detail.reduce((s, i) => s + productEUR(i.product, i.unitPrice * i.qty, i.size), 0)
 
   if (!detail.length) {
     return (
@@ -50,7 +50,7 @@ export default function CartPage() {
               </div>
               <div className="cart-item-price">
                 {formatUSD(unitPrice * qty)}
-                <span className="cart-item-price-eur">{formatNumberEUR(productEUR(product, unitPrice * qty))}</span>
+                <span className="cart-item-price-eur">{formatNumberEUR(productEUR(product, unitPrice * qty, size))}</span>
               </div>
               <button className="cart-remove" onClick={() => removeItem(product.id, size)}>
                 &times;

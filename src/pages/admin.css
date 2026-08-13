@@ -121,6 +121,31 @@
   white-space: nowrap;
 }
 
+.variant-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: #f4f8f9;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  margin: 6px 0 8px;
+}
+
+.variant-editor__row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.variant-editor__size {
+  flex: 1.2;
+}
+
+.variant-editor__price {
+  flex: 1;
+}
+
 .admin-form h2 {
   font-size: 18px;
   font-weight: 800;

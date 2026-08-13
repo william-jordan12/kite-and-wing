@@ -41,7 +41,7 @@ export default function ConfirmationPage() {
   const message = buildOrderMessage(order, settings.email)
   const total = order.total || 0
   const totalEUR = (order.items || []).reduce(
-    (s, i) => s + productEUR(i.product, (i.unitPrice || i.product?.price || 0) * i.qty),
+    (s, i) => s + productEUR(i.product, (i.unitPrice || i.product?.price || 0) * i.qty, i.size),
     0
   )
 

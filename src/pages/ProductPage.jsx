@@ -100,7 +100,7 @@ export default function ProductPage() {
             {product.type} &middot; {size}
           </span>
           <p className="product-detail-price">{formatUSD(price)}</p>
-          <p className="product-detail-price-eur">{formatNumberEUR(productEUR(product, price))}</p>
+          <p className="product-detail-price-eur">{formatNumberEUR(productEUR(product, price, size))}</p>
           <p className="product-description">{product.description}</p>
 
           {variants.length > 1 && (
