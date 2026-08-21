@@ -21,9 +21,10 @@ const authed = requireAuth(async (req, res) => {
     res.status(400).json({ error: 'Invalid image data' })
     return
   }
-  const token = process.env.GITHUB_TOKEN
+  const headerToken = req.headers['x-github-token']
+  const token = process.env.GITHUB_TOKEN || (typeof headerToken === 'string' && headerToken.trim())
   if (!token) {
-    res.status(500).json({ error: 'GITHUB_TOKEN is not configured' })
+    res.status(500).json({ error: 'No GitHub token. Add one in Admin → Settings.' })
     return
   }
   const ext = EXT[m[1]]

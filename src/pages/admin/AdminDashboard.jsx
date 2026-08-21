@@ -36,6 +36,8 @@ const toVariantForm = (v) => ({
   priceEur: v && v.priceEur != null ? String(v.priceEur) : '',
 })
 
+const GITHUB_TOKEN_KEY = 'kws_github_token'
+
 const EMPTY = {
   id: '',
   name: '',
@@ -74,6 +76,13 @@ export default function AdminDashboard() {
   const [unread, setUnread] = useState(0)
   const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirm: '' })
   const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false })
+  const [githubToken, setGithubToken] = useState(() => {
+    try {
+      return localStorage.getItem(GITHUB_TOKEN_KEY) || ''
+    } catch {
+      return ''
+    }
+  })
   const [toast, setToast] = useState('')
   const lastUnread = useRef(0)
   const firstPoll = useRef(true)
@@ -355,7 +364,7 @@ export default function AdminDashboard() {
       const productId = editing ? (form.id || '').trim() : slugify(form.id) || slugify(form.name)
       const ensureUrl = async (img) => {
         if (!img || !img.startsWith('data:')) return img
-        const { url } = await uploadImage(img, productId, token)
+        const { url } = await uploadImage(img, productId, token, githubToken.trim())
         return url
       }
       setMessage('Uploading photos…')
@@ -363,8 +372,7 @@ export default function AdminDashboard() {
       const extraImages = []
       for (const img of form.images) {
         extraImages.push(await ensureUrl(img))
-      }
-      const allImages = [mainImage, ...extraImages].filter(Boolean)
+      }      const allImages = [mainImage, ...extraImages].filter(Boolean)
       const payload = {
         ...form,
         id: productId,
@@ -826,6 +834,40 @@ export default function AdminDashboard() {
               <div className="admin-actions">
                 <button type="submit" className="btn btn-primary">
                   Save settings
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div className="admin-form">
+            <h2>GitHub token (photo uploads)</h2>
+            <p className="admin-sub">
+              Used to save product photos to the website repository. Stored only in this browser.
+            </p>
+            <form
+              onSubmit={(ev) => {
+                ev.preventDefault()
+                try {
+                  localStorage.setItem(GITHUB_TOKEN_KEY, githubToken.trim())
+                  setMessage('GitHub token saved in this browser.')
+                } catch {
+                  setError('Could not save the token in this browser.')
+                }
+              }}
+            >
+              <div className="field">
+                <label>Token</label>
+                <input
+                  type="password"
+                  value={githubToken}
+                  onChange={(e) => setGithubToken(e.target.value)}
+                  placeholder="ghp_…"
+                  autoComplete="off"
+                />
+              </div>
+              <div className="admin-actions">
+                <button type="submit" className="btn btn-primary">
+                  Save token
                 </button>
               </div>
             </form>
