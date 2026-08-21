@@ -37,6 +37,13 @@ export const updateProduct = (id, product, token) =>
 export const deleteProduct = (id, token) =>
   request(`/products?id=${encodeURIComponent(id)}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
 
+export const uploadImage = (dataUrl, slug, token) =>
+  request('/upload-image', {
+    method: 'POST',
+    body: JSON.stringify({ dataUrl, slug }),
+    headers: { Authorization: `Bearer ${token}` },
+  })
+
 export const getOrders = (token) =>
   request('/orders', { headers: { Authorization: `Bearer ${token}` } })
 

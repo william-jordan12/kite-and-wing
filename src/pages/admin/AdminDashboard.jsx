@@ -8,6 +8,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  uploadImage,
   getOrders,
   getSettings,
   updateSettings,
@@ -351,17 +352,29 @@ export default function AdminDashboard() {
     setError('')
     setMessage('')
     try {
-      const allImages = [form.image, ...form.images].filter(Boolean)
+      const productId = editing ? (form.id || '').trim() : slugify(form.id) || slugify(form.name)
+      const ensureUrl = async (img) => {
+        if (!img || !img.startsWith('data:')) return img
+        const { url } = await uploadImage(img, productId, token)
+        return url
+      }
+      setMessage('Uploading photos…')
+      const mainImage = await ensureUrl(form.image)
+      const extraImages = []
+      for (const img of form.images) {
+        extraImages.push(await ensureUrl(img))
+      }
+      const allImages = [mainImage, ...extraImages].filter(Boolean)
       const payload = {
         ...form,
-        id: editing ? (form.id || '').trim() : slugify(form.id) || slugify(form.name),
+        id: productId,
         name: (form.name || '').trim(),
         brand: (form.brand || '').trim(),
         type: (form.type || '').trim(),
         size: (form.size || '').trim(),
         price: Number(form.price),
         priceEur: form.priceEur ? Number(form.priceEur) : null,
-        image: form.image || allImages[0] || '',
+        image: mainImage || allImages[0] || '',
         images: allImages,
         variants: form.variants
           .map((v) => ({
