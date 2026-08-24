@@ -1,6 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { getProducts } from '../api'
-import { PRODUCTS as FALLBACK } from '../data/store'
+import { PRODUCTS as SEED } from '../data/store'
+import CATALOG_BACKUP from '../data/catalog-backup.json'
+
+const seen = new Set()
+export const FALLBACK = [...SEED, ...CATALOG_BACKUP].filter((p) => {
+  if (!p || !p.id || seen.has(p.id)) return false
+  seen.add(p.id)
+  return true
+})
 
 const ProductsContext = createContext(null)
 
