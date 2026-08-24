@@ -1,16 +1,31 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { getProducts } from '../api'
+import { getProducts, fetchCatalog } from '../api'
 import { PRODUCTS as SEED } from '../data/store'
-import CATALOG_BACKUP from '../data/catalog-backup.json'
 
 const seen = new Set()
-export const FALLBACK = [...SEED, ...CATALOG_BACKUP].filter((p) => {
+export const FALLBACK = [...SEED].filter((p) => {
   if (!p || !p.id || seen.has(p.id)) return false
   seen.add(p.id)
   return true
 })
 
 const ProductsContext = createContext(null)
+
+async function loadWithFallback() {
+  try {
+    const data = await getProducts()
+    if (Array.isArray(data)) return { data, source: 'database' }
+  } catch {
+    // database unavailable — try the published catalog file
+  }
+  try {
+    const data = await fetchCatalog()
+    if (Array.isArray(data) && data.length) return { data, source: 'catalog' }
+  } catch {
+    // catalog file unavailable — use the bundled seed
+  }
+  return { data: FALLBACK, source: 'seed' }
+}
 
 export function ProductsProvider({ children }) {
   const [products, setProducts] = useState(FALLBACK)
@@ -22,22 +37,12 @@ export function ProductsProvider({ children }) {
     if (started.current) return
     started.current = true
     let active = true
-    getProducts()
-      .then((data) => {
-        if (!active) return
-        if (Array.isArray(data)) {
-          setProducts(data)
-          setSource('database')
-        } else {
-          setSource('seed')
-        }
-      })
-      .catch(() => {
-        if (active) setSource('seed')
-      })
-      .finally(() => {
-        if (active) setLoading(false)
-      })
+    loadWithFallback().then((result) => {
+      if (!active) return
+      setProducts(result.data)
+      setSource(result.source)
+      setLoading(false)
+    })
     return () => {
       active = false
     }
@@ -49,19 +54,9 @@ export function ProductsProvider({ children }) {
       loading,
       source,
       reload: async () => {
-        try {
-          const data = await getProducts()
-          if (Array.isArray(data)) {
-            setProducts(data)
-            setSource('database')
-          } else {
-            setProducts(FALLBACK)
-            setSource('seed')
-          }
-        } catch {
-          setProducts(FALLBACK)
-          setSource('seed')
-        }
+        const result = await loadWithFallback()
+        setProducts(result.data)
+        setSource(result.source)
       },
       getProduct: (id) => products.find((p) => p.id === id),
       byCategory: (categoryId) => products.filter((p) => p.category === categoryId),

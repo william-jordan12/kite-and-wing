@@ -47,6 +47,31 @@ export const uploadImage = (dataUrl, slug, token, githubToken) =>
     },
   })
 
+export const fetchCatalog = async () => {
+  const res = await fetch('/data/products.json')
+  if (!res.ok) throw new Error(`Catalog unavailable (${res.status})`)
+  return res.json()
+}
+
+export const publishCatalogProduct = (product, token, githubToken) =>
+  request('/catalog', {
+    method: 'POST',
+    body: JSON.stringify({ product }),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...(githubToken ? { 'x-github-token': githubToken } : {}),
+    },
+  })
+
+export const deleteCatalogProduct = (id, token, githubToken) =>
+  request(`/catalog?id=${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...(githubToken ? { 'x-github-token': githubToken } : {}),
+    },
+  })
+
 export const getOrders = (token) =>
   request('/orders', { headers: { Authorization: `Bearer ${token}` } })
 

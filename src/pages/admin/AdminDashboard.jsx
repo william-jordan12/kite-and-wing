@@ -9,6 +9,9 @@ import {
   updateProduct,
   deleteProduct,
   uploadImage,
+  publishCatalogProduct,
+  deleteCatalogProduct,
+  fetchCatalog,
   getOrders,
   getSettings,
   updateSettings,
@@ -122,8 +125,12 @@ export default function AdminDashboard() {
   const loadProducts = async () => {
     try {
       setProducts(await getProducts())
-    } catch (e) {
-      setError(e.message)
+    } catch {
+      try {
+        setProducts(await fetchCatalog())
+      } catch {
+        setError('Could not load products.')
+      }
     }
   }
 
@@ -392,14 +399,31 @@ export default function AdminDashboard() {
           }))
           .filter((v) => v.size),
       }
-      if (editing) {
-        await updateProduct(editing, payload, token)
-      } else {
-        await createProduct(payload, token)
+      let catalogMode = false
+      try {
+        if (editing) {
+          await updateProduct(editing, payload, token)
+        } else {
+          await createProduct(payload, token)
+        }
+      } catch {
+        if (!githubToken.trim()) {
+          throw new Error(
+            'Database is offline and no GitHub token is saved. Add one in Settings → GitHub token to post.'
+          )
+        }
+        await publishCatalogProduct(payload, token, githubToken.trim())
+        catalogMode = true
       }
       await Promise.all([loadProducts(), reload()])
       startNew()
-      setMessage(editing ? 'Product updated.' : 'Product created.')
+      setMessage(
+        catalogMode
+          ? 'Published to the live catalog. It appears on the site in ~2 minutes and will be synced to the database when it is back online.'
+          : editing
+            ? 'Product updated.'
+            : 'Product created.'
+      )
     } catch (e) {
       setError(e.message)
     }
@@ -419,9 +443,19 @@ export default function AdminDashboard() {
   const remove = async (id) => {
     if (!window.confirm('Delete this product?')) return
     try {
-      await deleteProduct(id, token)
+      try {
+        await deleteProduct(id, token)
+        setMessage('Product deleted.')
+      } catch {
+        if (!githubToken.trim()) {
+          throw new Error(
+            'Database is offline and no GitHub token is saved. Add one in Settings → GitHub token to delete.'
+          )
+        }
+        await deleteCatalogProduct(id, token, githubToken.trim())
+        setMessage('Removed from the live catalog. It disappears from the site in ~2 minutes.')
+      }
       await Promise.all([loadProducts(), reload()])
-      setMessage('Product deleted.')
     } catch (e) {
       setError(e.message)
     }
