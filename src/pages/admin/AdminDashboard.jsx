@@ -371,7 +371,7 @@ export default function AdminDashboard() {
       const productId = editing ? (form.id || '').trim() : slugify(form.id) || slugify(form.name)
       const ensureUrl = async (img) => {
         if (!img || !img.startsWith('data:')) return img
-        const { url } = await uploadImage(img, productId, token, githubToken.trim())
+        const { url } = await uploadImage(img, productId, token)
         return url
       }
       setMessage('Uploading photos…')
@@ -874,9 +874,10 @@ export default function AdminDashboard() {
           </div>
 
           <div className="admin-form">
-            <h2>GitHub token (photo uploads)</h2>
+            <h2>GitHub token (offline fallback)</h2>
             <p className="admin-sub">
-              Used to save product photos to the website repository. Stored only in this browser.
+              Photos now upload to Cloudinary automatically. This token is only needed if the
+              database is offline and you post while in the catalog-fallback mode. Optional.
             </p>
             <form
               onSubmit={(ev) => {
@@ -890,7 +891,7 @@ export default function AdminDashboard() {
               }}
             >
               <div className="field">
-                <label>Token</label>
+                <label>Token (optional)</label>
                 <input
                   type="password"
                   value={githubToken}

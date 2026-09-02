@@ -133,6 +133,7 @@ for (const row of rows) {
     ])
     updatedProducts++
   }
+  console.log(`[${updatedProducts}] ${row.id} -> ${(newImage || '').slice(0, 60)}`)
 }
 
 writeFileSync(join(here, 'links.json'), JSON.stringify(links, null, 2))

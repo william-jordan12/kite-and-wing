@@ -1,3 +1,4 @@
+import crypto from 'node:crypto'
 import { requireAuth, readBody } from './_auth.js'
 
 export default async function handler(req, res) {
@@ -12,7 +13,9 @@ export default async function handler(req, res) {
   }
 }
 
-const EXT = { png: 'png', jpeg: 'jpg', jpg: 'jpg', webp: 'webp', gif: 'gif' }
+const CLOUD = process.env.CLOUDINARY_CLOUD_NAME
+const KEY = process.env.CLOUDINARY_API_KEY
+const SECRET = process.env.CLOUDINARY_API_SECRET
 
 const authed = requireAuth(async (req, res) => {
   const body = await readBody(req)
@@ -21,42 +24,42 @@ const authed = requireAuth(async (req, res) => {
     res.status(400).json({ error: 'Invalid image data' })
     return
   }
-  const headerToken = req.headers['x-github-token']
-  const token = process.env.GITHUB_TOKEN || (typeof headerToken === 'string' && headerToken.trim())
-  if (!token) {
-    res.status(500).json({ error: 'No GitHub token. Add one in Admin → Settings.' })
+  if (!CLOUD || !KEY || !SECRET) {
+    res.status(500).json({ error: 'Cloudinary is not configured for this site.' })
     return
   }
-  const ext = EXT[m[1]]
+
   const slug =
     String(body.slug || '')
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '') || 'photo'
-  const name = `${slug}-${Date.now()}.${ext}`
-  const repo = process.env.GITHUB_REPO || 'william-jordan12/kite-and-wing'
-  const branch = process.env.GITHUB_BRANCH || 'main'
-  const path = `public/images/products/${name}`
+  const publicId = `kw/${slug}-${Date.now()}`
 
-  const r = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-      'User-Agent': 'kite-and-wing-upload',
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
-    body: JSON.stringify({
-      message: `Add product photo ${name}`,
-      content: m[2],
-      branch,
-    }),
+  const timestamp = Math.floor(Date.now() / 1000)
+  const params = { public_id: publicId, overwrite: 'true', timestamp: String(timestamp) }
+  const toSign = Object.keys(params)
+    .sort()
+    .map((k) => `${k}=${params[k]}`)
+    .join('&')
+  const signature = crypto.createHash('sha1').update(toSign + SECRET).digest('hex')
+
+  const form = new URLSearchParams({
+    file: body.dataUrl,
+    api_key: KEY,
+    ...params,
+    signature,
+  })
+
+  const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`, {
+    method: 'POST',
+    body: form,
   })
   if (!r.ok) {
     const text = await r.text()
-    res.status(502).json({ error: `GitHub upload failed (${r.status}): ${text.slice(0, 200)}` })
+    res.status(502).json({ error: `Cloudinary upload failed (${r.status}): ${text.slice(0, 200)}` })
     return
   }
-  res.status(201).json({ url: `/images/products/${name}` })
+  const data = await r.json()
+  res.status(201).json({ url: data.secure_url })
 })
